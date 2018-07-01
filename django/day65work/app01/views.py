@@ -1,7 +1,6 @@
 import pymysql
 from django.shortcuts import redirect, render
 
-
 def teachers(request):
     conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='student_management',charset='utf8')
     cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
