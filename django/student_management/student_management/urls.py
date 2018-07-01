@@ -19,5 +19,8 @@ from app01 import views
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
-    path('cls/', admin.site.urls),
+    path('classes/', views.classes),
+    path('add_class/', views.add_class),
+    path('del_class/', views.del_class),
+    path('edit_class/', views.edit_class),
 ]
