@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>学生列表</h1>
+    <div>
+        <a href="/add_students/">添加</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>学生名字</th>
+                <th>所属班级</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in students_list %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>{{ row.title }}</td>
+                    <td>
+                        <a href="/edit_students/?nid={{ row.id }}">编辑</a>
+                        |
+                        <a href="/del_students/?nid={{ row.id }}">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
