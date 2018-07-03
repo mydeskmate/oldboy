@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>编辑班级</h1>
+    <div>
+        <p>班级名称: <input id="title" type="text" name="title" value="{{ current_class.title }}"></p>
+        <input type="button" value="提交" onclick="AjaxEdit({{ current_class.id }});">
+    </div>
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script>
+        function AjaxEdit(id) {
+            $.ajax({
+                url: '/edit_class_ajax/',
+                type: 'POST',
+                data: {'nid': id, 'title': $('#title').val()},
+                success: function (data) {
+                    console.log(data)
+                    if(data == "OK"){
+                        location.href='/classes/'
+                    }
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 import pymysql
 
 def classes(request):
@@ -94,3 +94,30 @@ def edit_students(request):
         class_id = request.POST.get('class_id')
         dbhelper.modify('update student set name=%s,class_id=%s where id=%s',[name,class_id,nid,])
         return redirect('/students/')
+
+# ############################ 对话框 ############################
+
+def modal_add_class(request):
+    title = request.POST.get('title')
+    if len(title) > 0:
+        dbhelper.modify('insert into class(title) values(%s)',[title,])
+        return HttpResponse('OK')
+    else:
+        return HttpResponse('班级标题不能为空')
+
+def del_class_ajax(request):
+    nid = request.POST.get('nid')
+    print(nid)
+    dbhelper.modify("delete from class where id=%s", [nid, ])
+    return HttpResponse('OK')
+
+def edit_class_ajax(request):
+    if request.method == 'GET':
+        nid = request.GET.get('nid')
+        current_class = dbhelper.get_one("select id,title from class where id=%s", [nid,])
+        return render(request,'edit_class_ajax.html',{'current_class':current_class})
+    else:
+        nid = request.POST.get('nid')
+        title = request.POST.get('title')
+        dbhelper.modify("update class set title=%s where id=%s", [title, nid,])
+        return HttpResponse("OK")
