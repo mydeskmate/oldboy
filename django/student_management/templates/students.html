@@ -3,11 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .hide{
+            display: none;
+        }
+        .shadow{
+            /*相对于窗口*/
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background-color: black;
+            opacity: 0.4;
+            z-index: 999;
+        }
+        .add-modal{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 300px;
+            z-index: 1000;
+            background-color: white;
+            margin-left: -200px;
+            margin-top: -200px;
+        }
+    </style>
 </head>
 <body>
     <h1>学生列表</h1>
     <div>
         <a href="/add_students/">添加</a>
+        <a id="modal-add">对话框添加</a>
     </div>
     <table>
         <thead>
@@ -32,5 +60,27 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <div id="shadow" class="shadow hide"></div>
+    <div id="addModal" class="add-modal hide">
+        <p>
+            姓名： <input type="text" name="name">
+        </p>
+        <p>
+            班级：
+            <select id="addClassId" name="ClassId">
+                <option value="">一班</option>
+                <option value="">二班</option>
+            </select>
+        </p>
+    </div>
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script>
+        $(function () {
+            $("#modal-add").click(function () {
+                $("#shadow,#addModal").removeClass('hide')
+            })
+        })
+    </script>
 </body>
 </html>
