@@ -34,5 +34,9 @@ urlpatterns = [
     path('edit_class_ajax/', views.edit_class_ajax),
     path('modal_edit_class/', views.modal_edit_class),
 
+    path('modal_add_student/', views.modal_add_student),
+    path('modal_edit_student/', views.modal_edit_student),
+    path('modal_del_student/', views.modal_del_student),
+
 ]
 

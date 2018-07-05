@@ -64,8 +64,9 @@ def edit_class(request):
 
 from utils import dbhelper
 def students(request):
-    students_list = dbhelper.get_list("select student.id,student.name,class.title from student left join class on student.class_id=class.id",[])
-    return render(request,'students.html',{'students_list':students_list})
+    students_list = dbhelper.get_list("select student.id,student.name,student.class_id,class.title from student left join class on student.class_id=class.id",[])
+    class_list =dbhelper.get_list("select id,title from class",[])           # 需要ID,添加时需要传递id
+    return render(request,'students.html',{'students_list':students_list,'class_list':class_list})
 
 def add_students(request):
     if request.method == 'GET':
@@ -134,4 +135,39 @@ def modal_edit_class(request):
     except Exception as e:
         ret['status'] = False
         ret['message'] = '处理异常'
+    return HttpResponse(json.dumps(ret))
+
+def modal_add_student(request):
+    ret = {'status':True, 'message':None}
+    name = request.POST.get('name')
+    classId = request.POST.get('classId')
+    print(name)
+    print(classId)
+    try:
+        dbhelper.modify('insert into student (name,class_id) values (%s,%s)',[name,classId,])
+    except Exception as e:
+        ret['status'] = False
+        ret['message'] = str(e)
+    return HttpResponse(json.dumps(ret))
+
+def modal_edit_student(request):
+    ret = {'status':True,'message':None}
+    try:
+        nid = request.POST.get('nid')
+        name = request.POST.get('name')
+        class_id = request.POST.get('class_id')
+        dbhelper.modify('update student set name=%s,class_id=%s where id=%s',[name,class_id,nid,])
+    except Exception as e:
+        ret['status'] = False
+        ret['message'] = str(e)
+    return HttpResponse(json.dumps(ret))
+
+def modal_del_student(request):
+    ret = {'status':True,'message':None}
+    try:
+        nid = request.POST.get('nid')
+        dbhelper.modify('delete from student where id=%s',[nid,])
+    except Exception as e:
+        ret['status'] = False
+        ret['message'] = str(e)
     return HttpResponse(json.dumps(ret))
