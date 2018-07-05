@@ -32,6 +32,7 @@ urlpatterns = [
     path('modal_add_class/', views.modal_add_class),
     path('del_class_ajax/', views.del_class_ajax),
     path('edit_class_ajax/', views.edit_class_ajax),
+    path('edit_class_ajax2/', views.edit_class_ajax2),
 
 ]
 

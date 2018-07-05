@@ -111,6 +111,7 @@ def del_class_ajax(request):
     dbhelper.modify("delete from class where id=%s", [nid, ])
     return HttpResponse('OK')
 
+
 def edit_class_ajax(request):
     if request.method == 'GET':
         nid = request.GET.get('nid')
@@ -121,3 +122,7 @@ def edit_class_ajax(request):
         title = request.POST.get('title')
         dbhelper.modify("update class set title=%s where id=%s", [title, nid,])
         return HttpResponse("OK")
+
+
+def edit_class_ajax2(request):
+    pass

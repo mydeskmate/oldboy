@@ -17,7 +17,7 @@
             opacity: 0.4;
             z-index: 999;
         }
-        .modal{
+        #modal,#edit-module{
             z-index: 1000;
             position: fixed;
             left: 50%;
@@ -52,6 +52,7 @@
                     <td>
                         <a href="/edit_class/?nid={{ row.id }}">编辑</a>
                         <a href="/edit_class_ajax/?nid={{ row.id }}">ajax编辑</a>
+                        <a id="edit-ajax">ajax编辑-boy</a>
                         |
                         <a href="/del_class/?nid={{ row.id }}">删除</a>
                         <a onclick="AjaxDelete({{ row.id }});">ajax删除</a>
@@ -61,13 +62,21 @@
         </tbody>
     </table>
     <div id="shadow" class="shadow hide"></div>
-    <div id="modal" class="modal hide">
+    <div id="modal" class="hide">
         <p>
             <input id="title" type="text" name="title" /><span id="errormsg"></span>
         </p>
         <input type="button" value="提交" onclick="AjaxSend();"  />
         <input type="button" value="取消" onclick="cancleModal();"  />
     </div>
+    <div id="edit-module" class="hide">
+        <p>班级名称: <input  type="text" name="title" value="{{ current_class.title }}"></p>
+        <input type="button" value="提交">
+    </div>
+
+
+
+
     <script src="/static/jquery-1.12.4.js"></script>
     <script>
         function showModal() {
@@ -110,6 +119,11 @@
                 }
             })
         }
+
+        $("#edit-ajax").click(function () {
+            $("#shadow,#edit-module").removeClass('hide')
+        })
+
     </script>
 </body>
 </html>
