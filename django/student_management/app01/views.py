@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect,HttpResponse
 import pymysql
+import json
 
 def classes(request):
     conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='student_management',charset='utf8')
@@ -124,5 +125,13 @@ def edit_class_ajax(request):
         return HttpResponse("OK")
 
 
-def edit_class_ajax2(request):
-    pass
+def modal_edit_class(request):
+    ret = {'status': True, 'message': None}
+    try:
+        nid = request.POST.get('nid')
+        title = request.POST.get('title')
+        dbhelper.modify('update class set title=%s where id=%s',[title,nid,])
+    except Exception as e:
+        ret['status'] = False
+        ret['message'] = '处理异常'
+    return HttpResponse(json.dumps(ret))

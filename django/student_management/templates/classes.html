@@ -17,7 +17,7 @@
             opacity: 0.4;
             z-index: 999;
         }
-        #modal,#edit-module{
+        .modal{
             z-index: 1000;
             position: fixed;
             left: 50%;
@@ -52,26 +52,32 @@
                     <td>
                         <a href="/edit_class/?nid={{ row.id }}">编辑</a>
                         <a href="/edit_class_ajax/?nid={{ row.id }}">ajax编辑</a>
-                        <a id="edit-ajax">ajax编辑-boy</a>
+                        <a  class="edit-ajax">对话框编辑</a>
                         |
                         <a href="/del_class/?nid={{ row.id }}">删除</a>
-                        <a onclick="AjaxDelete({{ row.id }});">ajax删除</a>
+                        <a onclick="AjaxDelete({{ row.id }})">删除</a>
+
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
     <div id="shadow" class="shadow hide"></div>
-    <div id="modal" class="hide">
+    <div id="modal" class="modal hide">
         <p>
             <input id="title" type="text" name="title" /><span id="errormsg"></span>
         </p>
         <input type="button" value="提交" onclick="AjaxSend();"  />
         <input type="button" value="取消" onclick="cancleModal();"  />
     </div>
-    <div id="edit-module" class="hide">
-        <p>班级名称: <input  type="text" name="title" value="{{ current_class.title }}"></p>
-        <input type="button" value="提交">
+    <div id="edit-module" class="modal hide">
+        <h3>编辑框</h3>
+        <p>
+            <input id="modal-id" type="text" value="3333" style="display: none">
+            班级名称: <input id="modal-title" type="text" name="title">
+        </p>
+        <input type="button" onclick="editAjaxSend();" value="提交"> <span id="errormsg2"></span>
+        <input type="button" value="取消" onclick="cancleModal();">
     </div>
 
 
@@ -87,6 +93,8 @@
         function cancleModal() {
             document.getElementById("shadow").classList.add('hide');
             document.getElementById("modal").classList.add('hide');
+            document.getElementById("edit-module").classList.add('hide');
+
         }
         function AjaxSend() {
             $.ajax({
@@ -120,10 +128,33 @@
             })
         }
 
-        $("#edit-ajax").click(function () {
-            $("#shadow,#edit-module").removeClass('hide')
+        $(".edit-ajax").click(function () {
+            tds = $(this).parent().prevAll();
+            nid = $(tds[1]).text();
+            title = $(tds[0]).text();
+            $("#modal-id").val(nid);
+            $("#modal-title").val(title);
+            $("#shadow,#edit-module").removeClass('hide');
         })
-
+        
+        function editAjaxSend() {
+            var nid = $("#modal-id").val()
+            var title = $("#modal-title").val()
+            $.ajax({
+                url:'/modal_edit_class/',
+                type:'POST',
+                data: {'nid':nid, 'title':title},
+                success:function (arg) {
+                    arg = JSON.parse(arg);
+                    if (arg.status){
+                        location.reload();
+                    }else {
+                        alert(arg.message)
+                    }
+                }
+            })
+        }
+        
     </script>
 </body>
 </html>
