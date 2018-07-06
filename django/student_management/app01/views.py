@@ -171,3 +171,11 @@ def modal_del_student(request):
         ret['status'] = False
         ret['message'] = str(e)
     return HttpResponse(json.dumps(ret))
+
+def teacher(request):
+    teacher_list = dbhelper.get_list('''
+    select teacher.id as tid,teacher.name,class.title from teacher 
+	left join teacher2class on teacher.id=teacher2class.teacher_id
+	left join class on teacher2class.class_id=class.id
+	''',[])
+    return render(request,'teacher.html',{'teacher_list':teacher_list})
