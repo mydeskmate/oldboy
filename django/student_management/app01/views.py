@@ -172,10 +172,32 @@ def modal_del_student(request):
         ret['message'] = str(e)
     return HttpResponse(json.dumps(ret))
 
+# 多对多，以老师表展示
 def teacher(request):
     teacher_list = dbhelper.get_list('''
     select teacher.id as tid,teacher.name,class.title from teacher 
 	left join teacher2class on teacher.id=teacher2class.teacher_id
 	left join class on teacher2class.class_id=class.id
 	''',[])
-    return render(request,'teacher.html',{'teacher_list':teacher_list})
+    result = {}
+    for row in teacher_list:
+        tid = row['tid']
+        if tid in result:
+            result[tid]['titles'].append(row['title'])
+        else:
+            result[tid] = {'tid':tid,'name':row['name'],'titles':[row['title'],]}
+    return render(request,'teacher.html',{'teacher_list':result.values()})
+
+
+def add_teacher(request):
+    if request.method == 'GET':
+        class_list = dbhelper.get_list('select * from class',[])
+        return render(request,'add_teacher.html',{'class_list':class_list})
+    else:
+        name = request.POST.get('name')
+        selected_class = request.POST.getlist('class_id')
+        last_rowid = dbhelper.modify('insert into teacher (name) values (%s)', [name, ])
+        for class_id in selected_class:
+            dbhelper.modify('insert into teacher2class (teacher_id,class_id) values (%s,%s)',[last_rowid,class_id,])
+
+        return redirect('/teacher/')

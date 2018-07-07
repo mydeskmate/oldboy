@@ -28,4 +28,5 @@ def modify(sql,args):
     conn.commit()
     cursor.close()
     conn.close()
+    return cursor.lastrowid
 

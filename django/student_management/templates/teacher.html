@@ -7,7 +7,7 @@
 <body>
     <h1>老师列表</h1>
     <div>
-        <a>添加</a>
+        <a href="/add_teacher/">添加</a>
     </div>
     <table border="1">
         <thead>
@@ -15,6 +15,7 @@
                 <th>ID</th>
                 <th>老师名字</th>
                 <th>授课班级</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -22,7 +23,16 @@
                 <tr>
                     <td>{{ row.tid }}</td>
                     <td>{{ row.name }}</td>
-                    <td>{{ row.title }}</td>
+                    <td>
+                        {% for foo in row.titles %}
+                             <span style="display: inline-block;padding: 2px;border: 1px solid red;">{{ foo }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a>编辑</a>
+                        |
+                        <a>删除</a>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

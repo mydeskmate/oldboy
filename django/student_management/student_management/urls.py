@@ -39,6 +39,7 @@ urlpatterns = [
     path('modal_del_student/', views.modal_del_student),
 
     path('teacher/', views.teacher),
+    path('add_teacher/', views.add_teacher),
 
 ]
 
