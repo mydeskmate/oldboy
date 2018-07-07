@@ -10,7 +10,7 @@
         <p>老师名字: <input type="text" name="name"></p>
         <div>
             所属班级:
-            <select name="class_id" multiple>
+            <select name="class_id" size="4" multiple>
                 {% for foo in class_list %}
                     <option value="{{ foo.id }}">{{ foo.title }}</option>
                 {% endfor %}

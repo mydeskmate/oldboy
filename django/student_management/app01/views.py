@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponse
 import pymysql
 import json
+import time
 
 def classes(request):
     conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='student_management',charset='utf8')
@@ -196,8 +197,75 @@ def add_teacher(request):
     else:
         name = request.POST.get('name')
         selected_class = request.POST.getlist('class_id')
-        last_rowid = dbhelper.modify('insert into teacher (name) values (%s)', [name, ])
-        for class_id in selected_class:
-            dbhelper.modify('insert into teacher2class (teacher_id,class_id) values (%s,%s)',[last_rowid,class_id,])
+        tid = dbhelper.modify('insert into teacher (name) values (%s)', [name, ])
+        # 多次连接,多次提交
+        # for class_id in selected_class:
+        #     dbhelper.modify('insert into teacher2class (teacher_id,class_id) values (%s,%s)',[last_rowid,class_id,])
+        # 一次连接,一次提交
+        print(selected_class)
+        # data_list = []  #[(17, '9'), (17, '12')]
+        # for class_id in selected_class:
+        #     temp = (tid,class_id)
+        #     data_list.append(temp)
 
+        data_list = [(tid,class_id) for class_id in selected_class]
+        print(data_list)
+        obj = dbhelper.DbHelper()
+        obj.multiple_modify('insert into teacher2class(teacher_id,class_id) values(%s,%s)',data_list)
+        obj.close()
         return redirect('/teacher/')
+
+def edit_teacher(request):
+    if request.method == 'GET':
+        tid = request.GET.get('tid')
+        obj = dbhelper.DbHelper()
+        teacher_info = obj.get_one('select id,name from teacher where id=%s',[tid,])
+        class_list = obj.get_list('select id,title from class',[])
+        t_class_id = obj.get_list('select class_id from teacher2class where teacher_id=%s',[tid,])
+        obj.close()
+        temp = [item['class_id'] for item in t_class_id]
+        return render(request,'edit_teacher.html',{'teacher_info':teacher_info,'class_list':class_list,'t_class_id':temp})
+    else:
+        tid = request.GET.get('tid')
+        name = request.POST.get('name')
+        class_list = request.POST.getlist('class_id')
+        obj = dbhelper.DbHelper()
+        obj.modify('update teacher set name=%s where id=%s',[name,tid,])
+        obj.modify('delete from teacher2class where teacher_id=%s',[tid,])
+        data_list = [(tid, class_id) for class_id in class_list]
+        obj.multiple_modify('insert into teacher2class(teacher_id,class_id) values(%s,%s)',data_list)
+        obj.close()
+        return redirect('/teacher/')
+
+def del_teacher(request):
+    tid = request.GET.get('tid')
+    obj = dbhelper.DbHelper()
+    obj.modify('delete from teacher2class where teacher_id=%s',[tid,])
+    obj.modify('delete from teacher  where id=%s',[tid,])
+    return redirect('/teacher/')
+
+def get_all_class(request):
+    obj = dbhelper.DbHelper()
+    class_list = obj.get_list('select id,title from class',[])
+    obj.close()
+    # print(class_list)
+    time.sleep(5)
+    return HttpResponse(json.dumps(class_list))
+
+def modal_add_teacher(request):
+    name = request.POST.get('name')
+    selected_class = request.POST.getlist('class_ids')
+    ret = {'status': True, 'message': None}
+    try:
+        tid = dbhelper.modify('insert into teacher (name) values (%s)', [name, ])
+        data_list = [(tid, class_id) for class_id in selected_class]
+        obj = dbhelper.DbHelper()
+        obj.multiple_modify('insert into teacher2class(teacher_id,class_id) values(%s,%s)', data_list)
+        obj.close()
+    except Exception as e:
+        ret['status'] = False
+        ret['message'] = '处理异常'
+    return HttpResponse(json.dumps(ret))
+
+def modal_edit_teacher(request):
+    return HttpResponse('gggg')
