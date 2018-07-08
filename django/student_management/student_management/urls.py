@@ -32,6 +32,23 @@ urlpatterns = [
     path('modal_add_class/', views.modal_add_class),
     path('del_class_ajax/', views.del_class_ajax),
     path('edit_class_ajax/', views.edit_class_ajax),
+    path('modal_edit_class/', views.modal_edit_class),
+
+    path('modal_add_student/', views.modal_add_student),
+    path('modal_edit_student/', views.modal_edit_student),
+    path('modal_del_student/', views.modal_del_student),
+
+    path('teacher/', views.teacher),
+    path('add_teacher/', views.add_teacher),
+    path('edit_teacher/', views.edit_teacher),
+    path('del_teacher/', views.del_teacher),
+
+
+    path('get_all_class/', views.get_all_class),
+
+    path('modal_add_teacher/', views.modal_add_teacher),
+    path('get_teacher_class/', views.get_teacher_class),
+    path('modal_edit_teacher/', views.modal_edit_teacher),
 
 ]
 

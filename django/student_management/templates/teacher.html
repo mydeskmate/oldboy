@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .hide{
+            display: none;
+        }
+        .shadow{
+            /*相对于窗口*/
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background-color: black;
+            opacity: 0.4;
+            z-index: 999;
+        }
+        .loading{
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            left: 50%;
+            top:50%;
+            margin-left: -16px;
+            margin-top: -16px;
+            background-image: url("/static/images/loading.gif");
+
+        }
+        .add-modal{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 300px;
+            z-index: 1000;
+            background-color: white;
+            margin-left: -200px;
+            margin-top: -200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>老师列表</h1>
+    <div>
+        <a href="/add_teacher/">添加</a>
+        <a id="btnAdd">对话框添加</a>
+    </div>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>老师名字</th>
+                <th>授课班级</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in teacher_list %}
+                <tr>
+                    <td>{{ row.tid }}</td>
+                    <td>{{ row.name }}</td>
+                    <td>
+                        {% for foo in row.titles %}
+                             <span style="display: inline-block;padding: 2px;border: 1px solid red;">{{ foo }}</span>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="/edit_teacher/?tid={{ row.tid }}">编辑</a>
+                        |
+                        <a  class="edit_Modal_teacher">对话框编辑</a>
+                        |
+                        <a href="/del_teacher/?tid={{ row.tid }}">删除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div id="shadow" class="shadow hide"></div>
+    <div id="loading" class="loading hide"></div>
+    <div id="addModal" class="add-modal hide">
+        <p>
+            老师姓名: <input id="addName" type="text" name="name">
+        </p>
+        <p>
+            <select id="classIds" multiple size="4">
+            </select>
+        </p>
+        <input id="addSubmit" type="button" value="提交">
+        <span id="addError"></span>
+    </div>
+    <div id="editModal" class="add-modal hide">
+        <p>
+            老师姓名: <input id="editName" type="text" name="name">
+        </p>
+        <p>
+            <select id="editClassIds" multiple size="4">
+            </select>
+        </p>
+        <input id="editSubmit" type="button" value="提交">
+        <span id="editError"></span>
+    </div>
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script>
+        $(function () {
+            bindAdd();
+            bindAddSubmit();
+            bindEditModal();
+            bindEditSubmit();
+        });
+
+        function bindAdd() {
+            $('#btnAdd').click(function () {
+                $('#shadow,#loading').removeClass('hide');
+
+                $.ajax({
+                url:'/get_all_class/',
+                type:'GET',
+                dataType:'JSON',
+                success:function (arg) {
+                    $.each(arg,function (i,row) {
+                        var tag = document.createElement('option');
+                        tag.innerHTML = row.title;
+                        tag.value = row.id;
+
+                        $('#classIds').append(tag)
+                    });
+
+                    $('#loading').addClass('hide');
+                    $('#addModal').removeClass('hide');
+                }
+
+                })
+            });
+
+
+        }
+
+        function bindAddSubmit() {
+            $('#addSubmit').click(function () {
+                tname = $('#addName').val();
+                console.log(tname);
+                class_ids = $('#classIds').val();
+                console.log(class_ids);
+                $.ajax({
+                    url:'/modal_add_teacher/',
+                    type:'POST',
+                    data:{'name':tname,'class_ids':class_ids},
+                    dataType:'JSON',
+                    traditional:true,// 如果提交的数据的值有列表，则需要添加此属性
+                    success:function (arg) {
+                        if (arg.status){
+                            location.reload();
+                        }else {
+                            $('#addError').text(arg.message);
+                        }
+                    }
+                })
+            })
+        }
+
+        function bindEditModal() {
+            $('.edit_Modal_teacher').click(function () {
+                $('#shadow,#editModal').removeClass('hide');
+                var tds = $(this).parent().prevAll()
+                var tid = $(tds[2]).text();
+                var name = $(tds[1]).text();
+                $('#editName').val(name);
+                $('#editName').attr('tid',tid);
+
+
+                $.ajax({
+                    url:'/get_teacher_class/',
+                    type:'POST',
+                    data:{'tid':tid},
+                    dataType:'JSON',
+                    success:function (arg) {
+                        class_ids = arg.class_ids;
+                        tea_class_id = arg.tea_class_id   //[3, 9]样式
+                        {#console.log(tea_class_id);#}
+                        $.each(class_ids,function (i, row) {
+                            var tag = document.createElement('option');
+                            tag.innerText = row.title;
+                            tag.value = row.id;
+
+                            if (tea_class_id.indexOf(row.id) != -1){ //当前班级
+                                tag.selected = "selected";
+                                {#console.log(tag.value)#}
+                            }
+                            $('#editClassIds').append(tag)
+                        })
+                    }
+                })
+
+            })
+        }
+        
+        function bindEditSubmit() {
+            $('#editSubmit').click(function () {
+                var tid = $('#editName').attr('tid');
+                var name = $('#editName').val();
+                var class_id = $('#editClassIds').val();
+                {#console.log(tid);#}
+                {#console.log(name);#}
+                {#console.log(class_id);#}
+                $.ajax({
+                    url:'/modal_edit_teacher/',
+                    type:'POST',
+                    data:{'tid':tid,'name':name,'class_id':class_id},
+                    dataType:'JSON',
+                    traditional:true,
+                    success:function (args) {
+                        console.log(args.status)
+                        if (args.status){
+                            location.reload();
+                        }else {
+                            $('#editError').text(args.message);
+                        }
+                    }
+                })
+            })
+        }
+    </script>
+</body>
+</html>
