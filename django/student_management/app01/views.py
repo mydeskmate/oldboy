@@ -267,5 +267,29 @@ def modal_add_teacher(request):
         ret['message'] = '处理异常'
     return HttpResponse(json.dumps(ret))
 
+def get_teacher_class(request):
+    tid = request.POST.get('tid')
+    obj = dbhelper.DbHelper()
+    class_ids = obj.get_list('select id,title from class',[])
+    tea_class_id = obj.get_list('select class_id from teacher2class where teacher_id=%s',[tid,])
+    tea_class_id = [item['class_id'] for item in tea_class_id]
+    class_info = {'class_ids':class_ids,'tea_class_id':tea_class_id}
+    obj.close()
+    return HttpResponse(json.dumps(class_info))
+
 def modal_edit_teacher(request):
-    return HttpResponse('gggg')
+    ret = {'status':True,'message':None}
+    try:
+        tid = request.POST.get('tid')
+        name = request.POST.get('name')
+        class_id = request.POST.getlist('class_id')
+
+        obj = dbhelper.DbHelper()
+        obj.modify('update teacher set name=%s where id=%s',[name,tid,])
+        obj.modify('delete from teacher2class where teacher_id=%s',[tid,])
+        data_list = [(tid,cls_id) for cls_id in class_id]
+        obj.multiple_modify('insert into teacher2class(teacher_id,class_id) values(%s,%s)',data_list)
+    except Exception as e:
+        ret['status'] = False
+        ret['message'] = str(e)
+    return HttpResponse(json.dumps(ret))

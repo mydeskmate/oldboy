@@ -93,14 +93,14 @@
     </div>
     <div id="editModal" class="add-modal hide">
         <p>
-            老师姓名: <input id="addName" type="text" name="name">
+            老师姓名: <input id="editName" type="text" name="name">
         </p>
         <p>
-            <select id="classIds" multiple size="4">
+            <select id="editClassIds" multiple size="4">
             </select>
         </p>
-        <input id="addSubmit" type="button" value="提交">
-        <span id="addError"></span>
+        <input id="editSubmit" type="button" value="提交">
+        <span id="editError"></span>
     </div>
     <script src="/static/jquery-1.12.4.js"></script>
     <script>
@@ -108,6 +108,7 @@
             bindAdd();
             bindAddSubmit();
             bindEditModal();
+            bindEditSubmit();
         });
 
         function bindAdd() {
@@ -163,16 +164,62 @@
         function bindEditModal() {
             $('.edit_Modal_teacher').click(function () {
                 $('#shadow,#editModal').removeClass('hide');
-                console.log(this)
-                tds = $(this).parent().prevAll();
-                tid = $(tds[3]).text();
-                console.log(tid)
+                var tds = $(this).parent().prevAll()
+                var tid = $(tds[2]).text();
+                var name = $(tds[1]).text();
+                $('#editName').val(name);
+                $('#editName').attr('tid',tid);
+
+
+                $.ajax({
+                    url:'/get_teacher_class/',
+                    type:'POST',
+                    data:{'tid':tid},
+                    dataType:'JSON',
+                    success:function (arg) {
+                        class_ids = arg.class_ids;
+                        tea_class_id = arg.tea_class_id   //[3, 9]样式
+                        {#console.log(tea_class_id);#}
+                        $.each(class_ids,function (i, row) {
+                            var tag = document.createElement('option');
+                            tag.innerText = row.title;
+                            tag.value = row.id;
+
+                            if (tea_class_id.indexOf(row.id) != -1){ //当前班级
+                                tag.selected = "selected";
+                                {#console.log(tag.value)#}
+                            }
+                            $('#editClassIds').append(tag)
+                        })
+                    }
+                })
+
+            })
+        }
+        
+        function bindEditSubmit() {
+            $('#editSubmit').click(function () {
+                var tid = $('#editName').attr('tid');
+                var name = $('#editName').val();
+                var class_id = $('#editClassIds').val();
+                {#console.log(tid);#}
+                {#console.log(name);#}
+                {#console.log(class_id);#}
                 $.ajax({
                     url:'/modal_edit_teacher/',
                     type:'POST',
-                    data:{}
+                    data:{'tid':tid,'name':name,'class_id':class_id},
+                    dataType:'JSON',
+                    traditional:true,
+                    success:function (args) {
+                        console.log(args.status)
+                        if (args.status){
+                            location.reload();
+                        }else {
+                            $('#editError').text(args.message);
+                        }
+                    }
                 })
-
             })
         }
     </script>
