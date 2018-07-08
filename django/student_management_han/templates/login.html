@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/plugins/font-awesome-4.7.0/css/font-awesome.css">
+</head>
+<body>
+    <div style="width: 450px;margin: 60px auto;">
+        <h2 style="padding-left: 80px;margin-bottom: 15px">用户登录</h2>
+        <form method="POST" action="/login/" class="form-horizontal">
+            <div class="form-group">
+                <label for="inputName" class="col-sm-2 control-label">用户名</label>
+                <div class="col-sm-10">
+                    <input id="inputName" type="text" name="name" placeholder="请输入用户名">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPwd" class="col-sm-2 control-label">密码</label>
+                <div class="col-sm-10">
+                    <input id="inputPwd" type="password" name="pwd" placeholder="请输入密码">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input class="btn btn-default" type="submit" value="登录">
+                    <span style="color:red">{{ msg}}</span>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
