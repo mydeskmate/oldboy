@@ -56,8 +56,18 @@
         #head_hav .item {
             padding: 0 13px 0 13px;
         }
-        .hide {
+        .hide{
             display: none;
+        }
+        .shadow{
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            opacity: 0.4;
+            z-index: 999;
         }
     </style>
 </head>
@@ -137,6 +147,14 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div id="shadow" class="shadow hide"></div>
+        <div id="modal" class="modal hide">
+            <p>
+                <input id="title" type="text" name="title" /><span id="errormsg"></span>
+            </p>
+            <input type="button" value="提交" onclick="AjaxSend();"  />
+            <input type="button" value="取消" onclick="cancleModal();"  />
         </div>
     </div>
     <script src="/static/jquery-1.12.4.js"></script>
