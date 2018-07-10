@@ -2,9 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Title</title>
 </head>
 <body>
-$END$
+    <ul>
+        {% for user in user_list %}
+            <li>{{ user }}| <a href="/edit/{{ user }}/">编辑</a></li>
+        {% endfor %}
+        
+    </ul>
 </body>
 </html>
