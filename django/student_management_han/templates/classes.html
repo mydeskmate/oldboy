@@ -2,9 +2,149 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/plugins/font-awesome-4.7.0/css/font-awesome.css">
+
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
+        }
+        a {
+            text-decoration: none;
+        }
+        #header{
+            width: 100%;
+            background:#2459A2;
+            color: #ffffff;
+        }
+        #head_content{
+            width: 1300px;
+            height: 40px;
+            margin: 0 auto;
+            line-height: 40px;
+        }
+        #left{
+            float: left;
+            width: 20%;
+        }
+        #right{
+            float: left;
+            width: 80%;
+        }
+        .title{
+            display: inline-block;
+            margin-right: 10px;
+            float: left;
+            color: #e38d13;
+        }
+        #head_hav{
+            float: left;
+        }
+        #head_hav a{
+            color: #c0cddf;
+            display: inline-block;
+        }
+        #head_hav a:hover{
+            text-decoration: none;
+            color: #ffffff;
+            background: #204982;
+        }
+        #head_hav .item {
+            padding: 0 13px 0 13px;
+        }
+        .hide{
+            display: none;
+        }
+        .shadow{
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            opacity: 0.4;
+            z-index: 999;
+        }
+        .modal{
+            z-index: 3000;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            height: 300px;
+            width: 400px;
+            background-color: red;
+            margin-left: -200px;
+            margin-top: -150px;
+        }
+    </style>
 </head>
 <body>
+    <div id="header">
+        <div id="head_content">
+            <span class="title">学员管理系统</span>
+            <div id="head_hav">
+                <a class="item" href="/index/">平台首页</a>
+                <a class="item" href="">帮助</a>
+            </div>
+        </div>
+    </div>
+    <div id="main-content">
+        <div id="left">
+            <ul class="nav nav-pills nav-stacked">
+              <li id="class_manage" role="presentation" class="active"><a href="/classes/">班级管理</a></li>
+              <li role="presentation"><a id="student_manage" href="/students/">学生管理</a></li>
+              <li role="presentation"><a href="#">老师管理</a></li>
+            </ul>
+        </div>
+        <div id="right">
+            <div id="classes" >
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>班级名称</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in class_list %}
+                            <tr>
+                                <td>{{ row.id }}</td>
+                                <td>{{ row.title }}</td>
+                                <td>
+                                    <a  class="edit-ajax">对话框编辑</a>
+                                    |
+                                    <a onclick="AjaxDelete({{ row.id }})">删除</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div>
+                    <input id="btnAdd" type="button" value="添加">
+                </div>
+            </div>
+        </div>
+        <div id="shadow" class="shadow hide"></div>
+        <div id="modal" class="modal hide">
+            <p>
+            <input id="title" type="text" name="title" /><span id="errormsg"></span>
+            </p>
+            <input type="button" value="提交" onclick="AjaxSend();"  />
+            <input type="button" value="取消" onclick="cancleModal();"  />
+        </div>
+    </div>
 
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script>
+        $('#btnAdd').click(function () {
+            $('#shadow,#modal').removeClass('hide');
+        })
+    </script>
 </body>
 </html>

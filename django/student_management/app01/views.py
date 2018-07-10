@@ -4,13 +4,17 @@ import json
 import time
 
 def classes(request):
-    conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='student_management',charset='utf8')
-    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-    cursor.execute("select id,title from class")
-    class_list = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return render(request,'classes.html',{'class_list':class_list})
+    tk = request.COOKIES.get('ticket')
+    if not tk:
+        return redirect('/login/')
+    else:
+        conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='student_management',charset='utf8')
+        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+        cursor.execute("select id,title from class")
+        class_list = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return render(request,'classes.html',{'class_list':class_list})
 
 def add_class(request):
     if request.method == "GET":
@@ -293,3 +297,20 @@ def modal_edit_teacher(request):
         ret['status'] = False
         ret['message'] = str(e)
     return HttpResponse(json.dumps(ret))
+
+def layout(request):
+    return render(request,'layout.html')
+
+def login(request):
+    if request.method == 'GET':
+        return render(request,'login.html')
+    else:
+        user = request.POST.get('username')
+        pwd = request.POST.get('password')
+        if user == 'han' and pwd == '123':
+            obj = redirect('/classes/')
+            print(obj)
+            obj.set_cookie('ticket','adfasdfsdfdsfd')
+            return obj
+        else:
+            return render(request,'login.html')

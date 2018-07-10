@@ -50,5 +50,12 @@ urlpatterns = [
     path('get_teacher_class/', views.get_teacher_class),
     path('modal_edit_teacher/', views.modal_edit_teacher),
 
+
+    path('layout/', views.layout),
+
+    path('login/', views.login),
+
+
+
 ]
 
