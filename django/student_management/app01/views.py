@@ -3,19 +3,34 @@ import pymysql
 import json
 import time
 
-def classes(request):
-    tk = request.COOKIES.get('ticket')
-    if not tk:
-        return redirect('/login/')
-    else:
-        conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='student_management',charset='utf8')
-        cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
-        cursor.execute("select id,title from class")
-        class_list = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return render(request,'classes.html',{'class_list':class_list})
 
+def auth(func):
+    def wrapper(request):
+        tk = request.get_signed_cookie('ticket', salt='jjjjjj')
+        if not tk:
+            return redirect('/login/')
+        res = func(request)
+        return res
+
+    return wrapper
+
+@auth
+def classes(request):
+    # tk = request.COOKIES.get('ticket')
+    # tk = request.get_signed_cookie('ticket',salt='jjjjjj')
+    # if not tk:
+    #     return redirect('/login/')
+
+    conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='student_management',charset='utf8')
+    cursor = conn.cursor(cursor=pymysql.cursors.DictCursor)
+    cursor.execute("select id,title from class")
+    class_list = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render(request,'classes.html',{'class_list':class_list})
+
+
+@auth
 def add_class(request):
     if request.method == "GET":
         return render(request,'add_class.html')
@@ -31,6 +46,7 @@ def add_class(request):
         conn.close()
         return redirect('/classes/')
 
+@auth
 def del_class(request):
     nid = request.GET.get('nid')
     conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd='123456', db='student_management',
@@ -42,6 +58,8 @@ def del_class(request):
     conn.close()
     return redirect('/classes/')
 
+
+@auth
 def edit_class(request):
     if request.method == 'GET':
         nid = request.GET.get('nid')
@@ -68,11 +86,15 @@ def edit_class(request):
         return redirect('/classes/')
 
 from utils import dbhelper
+
+@auth
 def students(request):
     students_list = dbhelper.get_list("select student.id,student.name,student.class_id,class.title from student left join class on student.class_id=class.id",[])
     class_list =dbhelper.get_list("select id,title from class",[])           # 需要ID,添加时需要传递id
     return render(request,'students.html',{'students_list':students_list,'class_list':class_list})
 
+
+@auth
 def add_students(request):
     if request.method == 'GET':
         class_list = dbhelper.get_list("select id,title from class",[])
@@ -83,11 +105,14 @@ def add_students(request):
         dbhelper.modify("insert into student(name,class_id) value (%s,%s)",[name,class_id,])
         return redirect('/students/')
 
+@auth
 def del_students(request):
     nid = request.GET.get('nid')
     dbhelper.modify('delete from student where id=%s',[nid,])
     return redirect('/students/')
 
+
+@auth
 def edit_students(request):
     if request.method == 'GET':
         nid = request.GET.get('nid')
@@ -104,6 +129,8 @@ def edit_students(request):
 
 # ############################ 对话框 ############################
 
+
+@auth
 def modal_add_class(request):
     title = request.POST.get('title')
     if len(title) > 0:
@@ -112,6 +139,7 @@ def modal_add_class(request):
     else:
         return HttpResponse('班级标题不能为空')
 
+@auth
 def del_class_ajax(request):
     nid = request.POST.get('nid')
     print(nid)
@@ -119,6 +147,7 @@ def del_class_ajax(request):
     return HttpResponse('OK')
 
 
+@auth
 def edit_class_ajax(request):
     if request.method == 'GET':
         nid = request.GET.get('nid')
@@ -131,6 +160,7 @@ def edit_class_ajax(request):
         return HttpResponse("OK")
 
 
+@auth
 def modal_edit_class(request):
     ret = {'status': True, 'message': None}
     try:
@@ -142,6 +172,8 @@ def modal_edit_class(request):
         ret['message'] = '处理异常'
     return HttpResponse(json.dumps(ret))
 
+
+@auth
 def modal_add_student(request):
     ret = {'status':True, 'message':None}
     name = request.POST.get('name')
@@ -155,6 +187,8 @@ def modal_add_student(request):
         ret['message'] = str(e)
     return HttpResponse(json.dumps(ret))
 
+
+@auth
 def modal_edit_student(request):
     ret = {'status':True,'message':None}
     try:
@@ -178,6 +212,8 @@ def modal_del_student(request):
     return HttpResponse(json.dumps(ret))
 
 # 多对多，以老师表展示
+
+@auth
 def teacher(request):
     teacher_list = dbhelper.get_list('''
     select teacher.id as tid,teacher.name,class.title from teacher 
@@ -194,6 +230,7 @@ def teacher(request):
     return render(request,'teacher.html',{'teacher_list':result.values()})
 
 
+@auth
 def add_teacher(request):
     if request.method == 'GET':
         class_list = dbhelper.get_list('select * from class',[])
@@ -219,6 +256,8 @@ def add_teacher(request):
         obj.close()
         return redirect('/teacher/')
 
+
+@auth
 def edit_teacher(request):
     if request.method == 'GET':
         tid = request.GET.get('tid')
@@ -241,6 +280,8 @@ def edit_teacher(request):
         obj.close()
         return redirect('/teacher/')
 
+
+@auth
 def del_teacher(request):
     tid = request.GET.get('tid')
     obj = dbhelper.DbHelper()
@@ -248,6 +289,8 @@ def del_teacher(request):
     obj.modify('delete from teacher  where id=%s',[tid,])
     return redirect('/teacher/')
 
+
+@auth
 def get_all_class(request):
     obj = dbhelper.DbHelper()
     class_list = obj.get_list('select id,title from class',[])
@@ -256,6 +299,8 @@ def get_all_class(request):
     time.sleep(5)
     return HttpResponse(json.dumps(class_list))
 
+
+@auth
 def modal_add_teacher(request):
     name = request.POST.get('name')
     selected_class = request.POST.getlist('class_ids')
@@ -271,6 +316,8 @@ def modal_add_teacher(request):
         ret['message'] = '处理异常'
     return HttpResponse(json.dumps(ret))
 
+
+@auth
 def get_teacher_class(request):
     tid = request.POST.get('tid')
     obj = dbhelper.DbHelper()
@@ -281,6 +328,8 @@ def get_teacher_class(request):
     obj.close()
     return HttpResponse(json.dumps(class_info))
 
+
+@auth
 def modal_edit_teacher(request):
     ret = {'status':True,'message':None}
     try:
@@ -298,6 +347,8 @@ def modal_edit_teacher(request):
         ret['message'] = str(e)
     return HttpResponse(json.dumps(ret))
 
+
+
 def layout(request):
     return render(request,'layout.html')
 
@@ -310,7 +361,9 @@ def login(request):
         if user == 'han' and pwd == '123':
             obj = redirect('/classes/')
             print(obj)
-            obj.set_cookie('ticket','adfasdfsdfdsfd')
+            # obj.set_cookie('ticket','adfasdfsdfdsfd')
+            obj.set_signed_cookie('ticket','123123',salt='jjjjjj')
             return obj
         else:
             return render(request,'login.html')
+
