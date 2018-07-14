@@ -1,4 +1,4 @@
-"""day70 URL Configuration
+"""day71 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -15,14 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import url
 from app01 import views
-from django.conf.urls import url,include
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-    # path('index/', views.index),
-    # url(r'^edit/(\w+)/', views.edit),
-    # url(r'^login.html$',views.Login.as_view()),
-    url(r'^test.html$',views.test),
-
+    path('admin/', admin.site.urls),
+    url(r'^test.html$', views.test),
+    url(r'^index.html$', views.index),
 ]
