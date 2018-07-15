@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^test.html$', views.test),
     url(r'^index.html$', views.index),
+    url(r'^csrf1.html$', views.csrf1),
 ]

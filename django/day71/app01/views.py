@@ -153,9 +153,110 @@ def test(request):
     # ]
     # models.UserInfo.objects.bulk_create(objs,10)
 
-    name_map = {'title':'name'}
-    v1 = models.UserInfo.objects.raw('SELECT id,title FROM app01_usertype',translations=name_map)
-    for i in v1:
-        print(i,type(i))
+    # name_map = {'title':'name'}
+    # v1 = models.UserInfo.objects.raw('SELECT id,title FROM app01_usertype',translations=name_map)
+    # for i in v1:
+    #     print(i,type(i))
+    # SELECT "app01_userinfo"."id", "app01_userinfo"."name", "app01_userinfo"."age", "app01_userinfo"."ut_id", "app01_usertype"."id", "app01_usertype"."title" FROM "app01_userinfo" INNER JOIN "app01_usertype" ON ("app01_userinfo"."ut_id" = "app01_usertype"."id")
+    # q = models.UserInfo.objects.all()
+    # print(q.query)
+    # for row in q:
+    #     print(row['name'],row['ut__title'])
 
-    return HttpResponse('l...............')
+    # SELECT "app01_userinfo"."id", "app01_userinfo"."name", "app01_userinfo"."age", "app01_userinfo"."ut_id", "app01_usertype"."id", "app01_usertype"."title" FROM "app01_userinfo" INNER JOIN "app01_usertype" ON ("app01_userinfo"."ut_id" = "app01_usertype"."id")
+    # q = models.UserInfo.objects.select_related('ut')
+    # print(q.query)
+    # for row in q:
+    #     print(row.name,row.ut.title)
+
+    # SELECT "app01_userinfo"."id", "app01_userinfo"."name", "app01_userinfo"."age", "app01_userinfo"."ut_id", "app01_usertype"."id", "app01_usertype"."title" FROM "app01_userinfo" INNER JOIN "app01_usertype" ON ("app01_userinfo"."ut_id" = "app01_usertype"."id")
+    # q = models.UserInfo.objects.prefetch_related('ut')
+    # print(q.query)
+    # for row in q:
+    #     print(row.name,row.ut.title)
+
+    # objs = [
+    #     models.Boy(name='方少伟'),
+    #     models.Boy(name='由秦兵'),
+    #     models.Boy(name='陈涛'),
+    #     models.Boy(name='闫龙'),
+    #     models.Boy(name='吴彦祖'),
+    # ]
+    # models.Boy.objects.bulk_create(objs,10)
+
+    # objss = [
+    #     models.Girl(nick='小鱼'),
+    #     models.Girl(nick='小周'),
+    #     models.Girl(nick='小猫'),
+    #     models.Girl(nick='小狗'),
+    # ]
+    # models.Girl.objects.bulk_create(objss,5)
+
+    # models.Love.objects.create(b_id=1,g_id=1)
+    # models.Love.objects.create(b_id=1,g_id=4)
+    # models.Love.objects.create(b_id=2,g_id=4)
+    # models.Love.objects.create(b_id=2,g_id=2)
+
+    # obj = models.Boy.objects.filter(name="方少伟").first()
+    # love_list = obj.love_set.all()
+    # for row in love_list:
+    #     print(row.g.nick)
+
+    # love_list = models.Love.objects.filter(b__name="方少伟")
+    # for row in love_list:
+    #     print(row.g.nick)
+
+
+    # love_list = models.Love.objects.filter(b__name='方少伟').values("g__nick")
+    # for row in love_list:
+    #     print(row['g__nick'])
+
+    # love_list = models.Love.objects.filter(b__name='方少伟').select_related('g')
+    # for row in love_list:
+    #     print(row.g.nick)
+    # obj = models.Boy.objects.filter(name='方少伟').first()
+    # print(obj.id,obj.name)
+    # obj.m.add(3)
+    # obj.m.add(1,2)
+    # obj.m.add(*[4])
+    # obj.m.remove(2,3)
+
+
+    # obj.m.set([1,])
+    # obj = models.Boy.objects.filter(name='方少伟').first()
+    # q = obj.m.filter(nick='小鱼')
+    # print(q)
+    # for obj in q:
+    #     print(obj.nick)
+
+    # obj.m.clear()
+
+    # obj = models.Girl.objects.filter(nick="小鱼").first()
+    # print(obj.id,obj.nick)
+    # v = obj.boy_set.all()
+    # print(v)
+
+
+    # return HttpResponse('l...............')
+
+from django.views.decorators.csrf import csrf_exempt,csrf_protect
+from django.views import View
+from django.utils.decorators import method_decorator
+
+@csrf_protect
+def csrf1(request):
+    if request.method == 'GET':
+        return render(request,'csrf1.html')
+    else:
+        return HttpResponse('OK')
+
+# @method_decorator(csrf_protect,name="post")
+# class Foo(View):
+#     def dispatch(self, request, *args, **kwargs):
+#         return "xxx"
+#
+#     def get(self,request):
+#         pass
+#
+#     def post(self,request):
+#         pass
