@@ -19,7 +19,7 @@ def index(request):
     #     models.UserInfo.objects.create(name=name,age=18,ut_id=1)
     return render(request,'index.html',{'posts':posts})
 
-def test(request):
+# def test(request):
     # models.UserType.objects.create(title='普通用户')
     # models.UserType.objects.create(title='二笔用户')
     # models.UserType.objects.create(title='牛逼用户')
@@ -243,12 +243,12 @@ from django.views.decorators.csrf import csrf_exempt,csrf_protect
 from django.views import View
 from django.utils.decorators import method_decorator
 
-@csrf_protect
-def csrf1(request):
-    if request.method == 'GET':
-        return render(request,'csrf1.html')
-    else:
-        return HttpResponse('OK')
+# @csrf_protect
+# def csrf1(request):
+#     if request.method == 'GET':
+#         return render(request,'csrf1.html')
+#     else:
+#         return HttpResponse('OK')
 
 # @method_decorator(csrf_protect,name="post")
 # class Foo(View):
@@ -260,3 +260,6 @@ def csrf1(request):
 #
 #     def post(self,request):
 #         pass
+def test(request):
+    models.UserInfo.objects.create(username='root',email='dddddddddddd')
+    return HttpResponse('.......')
