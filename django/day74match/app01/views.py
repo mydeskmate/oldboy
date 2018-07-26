@@ -35,4 +35,15 @@ def auth(func):
 
 @auth
 def index(request):
-    return render(request,'index.html')
+    gender = request.session.get('gender')
+    name = request.session.get('name')
+    if gender == "0":
+        ret_list = models.Girl.objects.all()
+        obj = models.Love.objects.filter(bid__name=name).values('gid__name')
+        print(obj)
+    else:
+        ret_list = models.Boy.objects.all()
+        obj = models.Love.objects.filter(gid__name=name).values('bid__name')
+
+
+    return render(request,'index.html',{"ret_list":ret_list,'obj':obj})

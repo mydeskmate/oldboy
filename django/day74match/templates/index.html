@@ -5,6 +5,22 @@
     <title>Title</title>
 </head>
 <body>
-ddddd
+<table>
+    异性列表:
+    {% for row in ret_list %}
+        <tr>
+            <td>{{ row.name }}</td>
+        </tr>
+    {% endfor %}
+</table>
+<table>
+     和自己交往的异性列表:
+    {% for row in obj %}
+        <tr>
+            <td>{{ row.gid__name }}</td>
+        </tr>
+    {% endfor %}
+
+</table>
 </body>
 </html>
