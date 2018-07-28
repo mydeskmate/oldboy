@@ -18,8 +18,12 @@ from django.urls import path
 from django.conf.urls import url
 from app01 import views
 
+
+
 urlpatterns = [
     # path('admin/', admin.site.urls),
+    # 自己做的
     url(r'^login.html$',views.login),
     url(r'^index.html$',views.index),
+
 ]
