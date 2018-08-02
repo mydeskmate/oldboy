@@ -7,7 +7,7 @@ class Classes(models.Model):
 class Student(models.Model):
     name = models.CharField(max_length=32)
     email = models.EmailField(max_length=32)
-    age = models.IntegerField(max_length=32)
+    age = models.IntegerField()
     cls = models.ForeignKey('Classes',on_delete=True)
 
 class Teacher(models.Model):

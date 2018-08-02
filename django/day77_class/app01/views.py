@@ -9,9 +9,8 @@ class ClassForm(Form):
     title = fields.RegexField('全栈\d+')
 
 def class_list(request):
-    if request.method == 'GET':
-        cls_list = models.Classes.objects.all()
-        return render(request,'class_list.html',{'cls_list':cls_list})
+    cls_list = models.Classes.objects.all()
+    return render(request,'class_list.html',{'cls_list':cls_list})
 
 def add_class(request):
     if request.method == 'GET':
@@ -42,8 +41,30 @@ class StudentForm(Form):
     name = fields.CharField(
         min_length=2,
         max_length=6,
-        widget=widgets.TextInput()
+        widget=widgets.TextInput(attrs={'class':'form-control'})
+    )
+    email = fields.EmailField(widget=widgets.TextInput(attrs={'class':'form-control'}))
+    age = fields.IntegerField(min_value=18,max_value=40,widget=widgets.TextInput(attrs={'class':'form-control'}))
+    cls_id = fields.IntegerField(
+        widget=widgets.Select(choices=models.Classes.objects.values_list('id','title'),attrs={'class':'form-control'})
     )
 
 def student_list(request):
-    pass
+    stu_list = models.Student.objects.all()
+    return render(request,'student_list.html',{'stu_list':stu_list})
+
+def add_student(request):
+    if request.method == 'GET':
+        obj = StudentForm()
+        return render(request,'add_student.html',{'obj':obj})
+    else:
+        obj = StudentForm(request.POST)
+        if obj.is_valid():
+            models.Student.objects.create(**obj.cleaned_data)
+            return redirect('/student_list/')
+        return render(request,'add_student.html',{'obj':obj})
+
+def edit_student(request,nid):
+    if request.method == 'GET':
+        obj = models.Student.objects.filter(id=nid).first()
+        return render(request,'edit_student.html',{'obj':obj})
