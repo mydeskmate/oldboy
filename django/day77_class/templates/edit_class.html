@@ -5,11 +5,14 @@
     <title>Title</title>
 </head>
 <body>
-    <h1>添加班级</h1>
-    <form method="POST" action="/add_class/">
+    <h1>编辑班级</h1>
+    <form method="post" action="/edit_class/{{  nid }}/">
         {% csrf_token %}
-        {{ obj.title }} {{ obj.errors.title.0 }}
+        <p>
+            {{ obj.title }} {{ obj.errors.title.0 }}
+        </p>
         <input type="submit" value="提交">
     </form>
+
 </body>
 </html>

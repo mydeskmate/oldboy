@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <p>用户登录</p>
+    <form action="/login/" method="post">
+        {% csrf_token %}
+        <p>
+            用户名: <input type="text" name="username">{{ obj.errors.username.0 }}
+        </p>
+        <p>
+            密码: <input type="text" name="password">{{ obj.errors.password.0 }}
+        </p>
+        <input type="radio" name="rmb"> 一个月内自动登录
+        <p>
+            <input type="submit" value="登录">
+        </p>
+    </form>
+</body>
+</html>

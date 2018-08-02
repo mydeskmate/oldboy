@@ -12,7 +12,7 @@
     <div>
         <ul>
             {% for cls in cls_list %}
-                <li>{{ cls.title }}</li>
+                <li>{{ cls.title }}<a href="/edit_class/{{ cls.id }}">编辑</a></li>
             {% endfor %}
         </ul>
     </div>

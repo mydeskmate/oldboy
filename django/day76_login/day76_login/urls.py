@@ -1,4 +1,4 @@
-"""day77_class URL Configuration
+"""day76_login URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -20,11 +20,6 @@ from app01 import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^class_list/',views.class_list),
-    url(r'^add_class/',views.add_class),
-    url(r'^edit_class/(\d+)/',views.edit_class),
-
-    url(r'^student_list/',views.student_list),
-#     url(r'^add_student/',views.add_student),
-#     url(r'^edit_student/',views.edit_student),
+    url(r'^login/',views.login),
+    url(r'^register/',views.register),
 ]
