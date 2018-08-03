@@ -66,5 +66,12 @@ def add_student(request):
 
 def edit_student(request,nid):
     if request.method == 'GET':
-        obj = models.Student.objects.filter(id=nid).first()
-        return render(request,'edit_student.html',{'obj':obj})
+        row = models.Student.objects.filter(id=nid).values('name','email','age','cls_id').first()
+        obj = StudentForm(initial=row)
+        return render(request,'edit_student.html',{'nid':nid,'obj':obj})
+    else:
+        obj = StudentForm(request.POST)
+        if obj.is_valid():
+            models.Student.objects.filter(id=nid).update(**obj.cleaned_data)
+            return redirect('/student_list/')
+        return render(request,'edit_student.html',{'nid':nid,'obj':obj})
