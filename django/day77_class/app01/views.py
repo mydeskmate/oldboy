@@ -75,3 +75,24 @@ def edit_student(request,nid):
             models.Student.objects.filter(id=nid).update(**obj.cleaned_data)
             return redirect('/student_list/')
         return render(request,'edit_student.html',{'nid':nid,'obj':obj})
+
+def teacher_list(request):
+    tea_list = models.Teacher.objects.all()
+    return render(request,'teacher_list.html',{'tea_list':tea_list})
+
+from django.forms import Form
+from django.forms import fields
+
+class TeacherForm(Form):
+    tname = fields.CharField(min_length=2)
+    xx = fields.MultipleChoiceField(
+        widget=widgets.SelectMultiple
+    )
+    def __init__(self,*args,**kwargs):
+        super(TeacherForm,self).__init__(*args,**kwargs)
+        self.fields['xx'].widget.choices = models.Classes.objects.values_list('id','title')
+
+def add_teacher(request):
+    if request.method == 'GET':
+        obj = TeacherForm()
+        return render(request,'add_teacher.html',{'ojb':obj})

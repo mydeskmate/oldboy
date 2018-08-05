@@ -27,4 +27,7 @@ urlpatterns = [
     url(r'^student_list/',views.student_list),
     url(r'^add_student/',views.add_student),
     url(r'^edit_student/(\d+)',views.edit_student),
+
+    url(r'^teacher_list/',views.teacher_list),
+    url(r'^add_teacher/',views.add_teacher),
 ]

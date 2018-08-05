@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>老师列表</h1>
+    <div>
+        <a href="/add_teacher/">添加老师</a>
+    </div>
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>老师姓名</th>
+            <th>任教班级</th>
+            <th>编辑</th>
+        </tr>
+        <tbody>
+            {% for row in tea_list %}
+                <tr>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.tname }}</td>
+                    <td>{{ row.c2t.all }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
