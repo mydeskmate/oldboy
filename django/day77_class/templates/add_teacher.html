@@ -2,17 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title></title>
 </head>
 <body>
-<form method="post" action="/add_teacher/">
+<form action="/add_teacher/" method="POST">
     {% csrf_token %}
-    <p>
-        姓名: {{ ojb.tname }}
-    </p>
+    <P>
+        姓名:  {{ obj.tname }} {{ obj.errors.tname.0 }}
+    </P>
     <p>
         班级: {{ obj.xx }}
     </p>
+    <input type="submit" value="提交">
+
 </form>
 </body>
 </html>

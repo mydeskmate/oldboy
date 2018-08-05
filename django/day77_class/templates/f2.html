@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/f2/" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ obj.user }}
+    {{ obj.fafafa }}
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>

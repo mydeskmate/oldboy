@@ -7,7 +7,7 @@
 <body>
     <h1>老师列表</h1>
     <div>
-        <a href="/add_teacher/">添加老师</a>
+        <a href="/add_teacher/">添加</a>
     </div>
     <table border="1">
         <tr>
@@ -21,8 +21,12 @@
                 <tr>
                     <td>{{ row.id }}</td>
                     <td>{{ row.tname }}</td>
-                    <td>{{ row.c2t.all }}</td>
-                    <td></td>
+                    <td>
+                        {% for class in row.c2t.all %}
+                            {{ class.title }}
+                        {% endfor %}
+                    </td>
+                    <td><a href="/edit_teacher/{{ row.id }}/">编辑</a></td>
                 </tr>
             {% endfor %}
         </tbody>

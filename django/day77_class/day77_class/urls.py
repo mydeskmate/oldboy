@@ -30,4 +30,9 @@ urlpatterns = [
 
     url(r'^teacher_list/',views.teacher_list),
     url(r'^add_teacher/',views.add_teacher),
+    url(r'^edit_teacher/(\d+)',views.edit_teacher),
+
+    url(r'^f2',views.f2),
+    url(r'^test/', views.test),
+
 ]
