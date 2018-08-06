@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        <input type="text" id="txt1">
+        <input type="button" value="查看" onclick="changeScr();">
+    </div>
+    <iframe id="ifr" style="width: 1000px;height: 2000px;" src="http://www.autohome.com.cn"></iframe>
+
+    <script>
+        function changeScr() {
+            var inp = document.getElementById('txt1').value;
+            document.getElementById('ifr').src = inp
+        }
+    </script>
+</body>
+</html>
