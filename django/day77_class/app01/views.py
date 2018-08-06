@@ -87,14 +87,14 @@ from django.forms import models as from_model
 class TeacherForm(Form):
     tname = fields.CharField(min_length=2)
     xx = fields.MultipleChoiceField(
-        choices=models.Classes.objects.values_list('id', 'title'),
-        widget=widgets.SelectMultiple
+        # choices=models.Classes.objects.values_list('id', 'title'),
+        widget=widgets.SelectMultiple()
     )
 
-    # 该方法有错误,无法添加成功
-    # def __init__(self, *args, **kwargs):
-    #     super(TeacherForm, self).__init__(*args, **kwargs)
-    #     self.fields['xx'].widget.choices = models.Classes.objects.values_list('id', 'title')
+    # 使用该方法
+    def __init__(self, *args, **kwargs):
+        super(TeacherForm, self).__init__(*args, **kwargs)
+        self.fields['xx'].choices = models.Classes.objects.values_list('id', 'title')
 
 
 def add_teacher(request):
