@@ -46,3 +46,6 @@ def upload(request):
                 f.write(chunk)
 
         return HttpResponse(file_path)
+
+def jsonp(request):
+    return render(request,'jsonp.html')

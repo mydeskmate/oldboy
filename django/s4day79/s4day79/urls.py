@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^autohome/',views.autohome),
     url(r'^fake_ajax/',views.fake_ajax),
     url(r'^upload/',views.upload),
+    url(r'^jsonp/',views.jsonp),
 ]

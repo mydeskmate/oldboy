@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="/static/commons.js"></script>
+{#    <script src="/static/commons2.js"></script>#}
+</head>
+<body>
+    <a onclick="sendMsg();">发送</a>
+
+    <script>
+        function sendMsg(){
+            var tag = document.createElement('script');
+            tag.src = "http://www.jxntv.cn/data/jmd-jxtv2.html?callback=list&_=1454376870403";
+            document.head.appendChild(tag);
+        }
+    </script>
+</body>
+</html>
