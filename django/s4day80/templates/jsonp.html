@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<input type="button" value="获取用户列表" onclick="getUsers();">
+<ul id="user_list">
+
+</ul>
+<script src="/static/jquery-1.12.4.js"></script>
+<script>
+    /*  jsonp 自己动态创建script
+    function getUsers() {
+        var tag = document.createElement('script');
+        tag.src = "http://www.s4.com:8001/users/?funcname=bbb";
+        document.head.appendChild(tag);
+    }
+
+    function bbb(arg) {
+        console.log(arg);
+    }
+
+    */
+
+    function getUsers() {
+        $.ajax({
+            url:'http://www.s4.com:8001/users/',
+            type:'POST',
+            dataType:'JSONP',
+            jsonp:'funcname',
+            jsonpCallback:'bbb'
+        })
+    }
+
+    function bbb(arg) {
+        console.log(arg)
+    }
+
+</script>
+</body>
+</html>
