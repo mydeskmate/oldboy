@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <input type="button" value="获取用户列表" onclick="getUsers();" />
+    <ul id="user_list">
+
+    </ul>
+
+    <script src="/static/jquery-1.12.4.js"></script>
+    <script>
+        function getUsers(){
+            $.ajax({
+                url: 'http://www.s4.com:8001/new_users/',
+                type:"DELETE",
+                success:function(arg){
+                    console.log(arg);
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -21,4 +21,5 @@ from app01 import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^jsonp/',views.jsonp),
+    url(r'^cors/',views.cors),
 ]
