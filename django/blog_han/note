@@ -3,6 +3,7 @@
 userinfo:  用户信息表
 id           id
 username     用户名
+password     密码
 nickname     昵称
 email        邮箱
 phone        手机号
@@ -36,7 +37,7 @@ read_count      阅读数
 comment_count   评论数
 bg              blog表外键
 cg              category外键
-tg              Tag对对多
+tg              Tag多对多
 
 
 
