@@ -1,0 +1,57 @@
+
+用户:
+userinfo:  用户信息表
+id           id
+username     用户名
+nickname     昵称
+email        邮箱
+phone        手机号
+
+
+
+类别:
+category:
+id          id
+title       类别名称
+
+标签:
+tag
+id          id
+title       标签名称
+
+博客:
+blog:
+id         id
+url        地址
+uf         userinfo表外键
+
+
+文章:
+article
+id              id
+created_time    创建时间
+like_count      赞个数
+unlike_count    踩个数
+read_count      阅读数
+comment_count   评论数
+bg              blog表外键
+cg              category外键
+tg              Tag对对多
+
+
+
+评论:
+comment
+id                   id
+comment_time         评论时间
+comment_detail_id    评论详情id
+article_id           文章id
+
+
+
+评论详情:
+comment_detail
+id                 id
+content            评论内容
+
+
