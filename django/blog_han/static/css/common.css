@@ -1,0 +1,31 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: unset !important;
+}
+
+body{
+    font-size: 12px;
+}
+
+h1,h2,h3,h4,h5 {
+    margin: 0!important;
+    padding: 0!important;
+}
+a {
+    text-decoration: none;
+}
+#header {
+    margin: 10px 50px 10px 50px;
+    height: 65px;
+    border: 1px solid gray;
+    line-height: 65px;
+}
+#middle{
+    margin: 10px 50px 10px 50px;
+    overflow: hidden;
+}
+
+.clear{
+    clear: both;
+}

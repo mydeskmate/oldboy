@@ -1,0 +1,91 @@
+#header .title {
+    width: 200px;
+    text-align: center;
+    font-size: 30px;
+    color:red;
+    float: left;
+}
+
+#header .menu{
+    float: left;
+}
+
+#header .menu a {
+    float: left;
+    height: 65px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #333333;
+}
+#header .menu a:hover{
+    background-color: #dddddd;
+    color: red;
+}
+#header .reg-box{
+    float: right;
+    margin-right: 30px;
+}
+#header .reg-box a {
+    color: #333333;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#middle .left{
+    width: 1000px;
+    padding-left: 45px;
+    float: left;
+}
+#middle .post_item {
+    /*box-sizing: border-box;*/
+    border-bottom: 1px dotted #cccccc;
+    /*border-width: 1px;*/
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+#middle .digg{
+    float: left;
+    width: 60px;
+}
+#middle .diggit{
+    float: left;
+    width: 46px;
+    height: 52px;
+    background: url("/static/images/upup.gif") no-repeat;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 2px;
+    text-indent: 0;
+}
+#middle .diggnum{
+    line-height: 2.2em;
+    font-size: 14px;
+    color: #075db3;
+    font-family: Verdana;
+}
+#middle .post_item_body {
+    float: left;
+    width: 900px;
+}
+#middle .post_item a.titlelnk{
+    color: #105cb6;
+    font-size: 14px;
+    font-weight: bold;
+}
+.post_item .post_item_summary{
+    line-height: 1.8em;
+    margin-bottom: 5px;
+    color: #333333;
+    padding-right: 5px;
+    font-size: 12px;
+    padding-top: 5px;
+}
+.post_item .post_item_foot{
+    color: #555;
+    padding-top: 5px;
+
+}
+.right{
+    float: right;
+    width: 400px;
+}

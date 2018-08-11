@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>博客园</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
+</head>
+<body>
+<div id="header">
+    <div class="title">博客家</div>
+    <div class="menu">
+        <a href="">全部</a>
+        <a href="">Python</a>
+        <a href="">Linux</a>
+        <a href="">OpenStack</a>
+        <a href="">GoLang</a>
+    </div>
+    <div class="reg-box">
+        <a href="">注册</a>
+        <a href="">登录</a>
+    </div>
+</div>
+<div id="middle">
+    <div class="left">
+        {% for row in article_list %}
+            <div class="post_item">
+                <div class="digg">
+                    <div class="diggit">
+                        <span class="diggnum">{{ row.up_count }}</span>
+                    </div>
+                </div>
+                <div class="post_item_body">
+                    <h3>
+                        <a class="titlelnk" href="">{{ row.title }}</a>
+                    </h3>
+                    <div class="post_item_summary">
+                        <a href="">头像</a>
+                        {{ row.summary }}
+                    </div>
+                    <div class="post_item_foot">
+                         {{ row.blog.user.nickname }} 发布于 {{ row.create_time}}  评论({{ row.comment_count }}) 阅读({{ row.read_count }})
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="right">
+        <div class="panel panel-default">
+          <div class="panel-heading">Panel heading without title</div>
+          <div class="panel-body">
+            Panel content
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Panel title</h3>
+          </div>
+          <div class="panel-body">
+            Panel content
+          </div>
+        </div>
+    </div>
+
+</div>
+<div id="footer"></div>
+</body>
+</html>
