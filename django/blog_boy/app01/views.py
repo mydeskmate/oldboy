@@ -1,5 +1,6 @@
 from django.shortcuts import render,HttpResponse
 from app01 import models
+from utils.pager import PageInfo
 
 # Create your views here.
 def index(request,*args,**kwargs):
@@ -18,13 +19,19 @@ def index(request,*args,**kwargs):
     article_list = models.Article.objects.filter(**condition)
     article_type_choices = models.Article.type_choices
 
+    #分页
+    all_count = article_list.count()
+    page_info = PageInfo(request.GET.get('page'),all_count,10,'/index.html',11)
+    article_list_page = article_list[page_info.start():page_info.end()]
+
     return render(
         request,
         'index.html',
         {
             'article_type_choices':article_type_choices,
             'type_id': type_id,
-            'article_list':article_list
+            'article_list_page':article_list_page,
+            'page_info':page_info
         },
     )
 

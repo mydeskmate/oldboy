@@ -61,7 +61,7 @@
 {#                </div>#}
 {#            </div>#}
             <div class="article-list">
-                {% for article in article_list %}
+                {% for article in article_list_page %}
                     <div class="article-item">
                         <h3 class="art-head"><a href="">{{ article.title }}</a></h3>
                         <div class="art-body clearfix">
@@ -77,6 +77,11 @@
                     </div>
                 {% endfor %}
             </div>
+            <nav aria-label="Page navigation">
+              <ul class="pagination">
+                  {{ page_info.pager|safe }}
+              </ul>
+            </nav>
 
         </div>
         <div class="col-md-4">
