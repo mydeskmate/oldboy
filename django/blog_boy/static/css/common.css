@@ -1,0 +1,10 @@
+.no_radius {
+    border-radius: 0!important;
+}
+.left {
+    float: left;
+}
+.article-list .article-item .art-body img {
+    width: 60px;
+    height: 60px;
+}
