@@ -1,6 +1,10 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
+from django.forms import Form
+from django.forms import fields
+from django.forms import widgets
 from app01 import models
 from utils.pager import PageInfo
+
 
 # Create your views here.
 def index(request,*args,**kwargs):
@@ -9,6 +13,13 @@ def index(request,*args,**kwargs):
     #     article_list = models.Article.objects.filter(article_type_id=type_id)
     # else:
     #     article_list = models.Article.objects.all()
+
+    username = request.session.get('username')
+    nickname = request.session.get('nickname')
+    if not username:
+        session_stat = 0
+    else:
+        session_stat = 1
 
     #分类查找文章表
     type_id = int(kwargs.get('type_id')) if kwargs.get('type_id') else None
@@ -31,9 +42,33 @@ def index(request,*args,**kwargs):
             'article_type_choices':article_type_choices,
             'type_id': type_id,
             'article_list_page':article_list_page,
-            'page_info':page_info
+            'page_info':page_info,
+            'session_stat':session_stat,
+            'nickname':nickname
         },
     )
+
+class LoginForm(Form):
+    username = fields.CharField(
+        max_length=18,
+        min_length=3,
+        error_messages={
+            'required':'用户名不能为空',
+            'min_length':'不能少于6位',
+            'max_length':'不能多于18位'
+        },
+        widget=widgets.TextInput(attrs={'class':'form-control'})
+    )
+    password = fields.CharField(
+        min_length=6,
+        error_messages={
+            'required':'密码不能为空',
+            'min_length':'密码不能少于8位'
+        },
+        widget=widgets.PasswordInput(attrs={'class':'form-control'})
+    )
+    code = fields.CharField(widget=widgets.TextInput(attrs={'class':'form-control'}))
+
 
 def login(request):
     """
@@ -42,14 +77,30 @@ def login(request):
     :return:
     """
     if request.method == 'GET':
-        return render(request,'login.html')
+        obj = LoginForm()
+        return render(request,'login.html',{'obj':obj})
     else:
+        obj = LoginForm(request.POST)
         input_code = request.POST.get('code')
         session_code = request.session.get('code')
-        if input_code == session_code:
-            pass
+
+        if obj.is_valid():
+            if input_code.upper() == session_code:
+                obj.cleaned_data.pop('code')
+                print(obj.cleaned_data)
+                res = models.UserInfo.objects.filter(**obj.cleaned_data).first()
+
+                if res:
+                    request.session['username'] = res.username
+                    request.session['nickname'] = res.nickname
+                    return redirect('/')
+                else:
+                    return render(request, 'login.html', {'obj': obj})
+            else:
+                return render(request, 'login.html', {'obj': obj,'msg':'验证码不正确'})
         else:
-            pass
+            return render(request, 'login.html', {'obj': obj})
+
 
 
 def check_code(request):

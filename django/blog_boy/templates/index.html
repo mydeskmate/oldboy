@@ -38,10 +38,19 @@
         {% endfor %}
       </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/login/">登录</a></li>
-        <li><a href="/register/">注册</a></li>
-      </ul>
+      {% if session_stat %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/login/">{{ nickname }}</a></li>
+            <li><a href="/login/">我的博客</a></li>
+            <li><a href="/login/">管理</a></li>
+            <li><a href="/login/">退出</a></li>
+          </ul>
+      {% else %}
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/login/">登录</a></li>
+            <li><a href="/register/">注册</a></li>
+          </ul>
+      {% endif %}
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
@@ -77,11 +86,13 @@
                     </div>
                 {% endfor %}
             </div>
+            {% if article_list_page %}
             <nav aria-label="Page navigation">
               <ul class="pagination">
                   {{ page_info.pager|safe }}
               </ul>
             </nav>
+            {% endif %}
 
         </div>
         <div class="col-md-4">
