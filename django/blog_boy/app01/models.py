@@ -39,7 +39,7 @@ class Blog(models.Model):
     """
     nid = models.BigAutoField(primary_key=True)
     title = models.CharField(verbose_name='个人博客标题',max_length=64),
-    site = models.CharField(verbose_name='个人博客前缀',max_length=32,unique=True)
+    site = models.CharField(verbose_name='个人博客后缀',max_length=32,unique=True)
     theme = models.CharField(verbose_name='博客主题',max_length=32)
     user = models.OneToOneField(to="UserInfo",to_field='nid',on_delete=models.CASCADE)
 
