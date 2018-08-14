@@ -21,16 +21,16 @@
             border: 0;
             position: absolute;
             top: 249px;
-            left: 699px;
+            left: 750px;
             z-index: 10;
         }
         .avatar{
             position: absolute;
             width: 70px;
             height: 34px;
-            top: 100px;
-            left: 698px;
-            {#opacity: 0;#}
+            top: 249px;
+            left: 750px;
+            opacity: 0;
             z-index: 20;
         }
 
@@ -76,10 +76,10 @@
             </div>
           </div>
         </form>
-        <form id="f2" target="ifr" method="POST" action="/register/" enctype="multipart/form-data">
+        <form id="f2"  method="POST" action="/register/" target="ifr" enctype="multipart/form-data">
             {% csrf_token %}
             <iframe id="ifr" name="ifr" style="display: none;"></iframe>
-            <input type="file" class="avatar" name="avatar">
+            <input type="file" class="avatar" name="avatar" onchange="upload3()">
             <input class="upload" type="button" value="上传" onclick="upload3();">
         </form>
         <div id="container2"></div>

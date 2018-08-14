@@ -136,11 +136,19 @@ class RegisterForm(Form):
     nickname = fields.CharField(max_length=32,widget=widgets.TextInput(attrs={'class': 'form-control'}))
     email = fields.EmailField(widget=widgets.EmailInput(attrs={'class': 'form-control'}))
 
-
+import os
 def register(request):
     if request.method == 'GET':
         obj = RegisterForm()
         return render(request,'register.html',{'obj':obj})
+    else:
+        file_obj = request.FILES.get('avatar')
+        file_path = os.path.join('static',file_obj.name)
+        with open(file_path,'wb') as f:
+            for chunk in file_obj.chunks():
+                f.write(chunk)
+        print(file_path)
+        return HttpResponse(file_path)
 
 
 
