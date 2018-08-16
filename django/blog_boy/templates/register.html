@@ -10,36 +10,24 @@
             margin: 0 auto;
             margin-top: 50px;
         }
-        .upload{
-            width: 72px;
-            height: 34px;
-            line-height: 34px;
-            color: #ffffff;
-            font-size: 14px;
-            background: #00619E;
-            padding: 0;
-            border: 0;
-            position: absolute;
-            top: 249px;
-            left: 750px;
-            z-index: 10;
+        .f1{
+            position: absolute;height: 80px;width: 80px;top: 0;left: 0;opacity: 0;
         }
-        .avatar{
-            position: absolute;
-            width: 70px;
-            height: 34px;
-            top: 249px;
-            left: 750px;
-            opacity: 0;
-            z-index: 20;
-        }
+
 
     </style>
 </head>
 <body>
     <div class="register">
-        <form class="form-horizontal" novalidate>
+        <form class="form-horizontal" action="/register/" method="POST" enctype="multipart/form-data" novalidate>
+{#            <h3>{{ obj.non_field_errors }}</h3>#}
             {% csrf_token %}
+          <div style="position: relative;height: 80px;width: 80px;">
+              <img id="previewImg" style="height: 80px;width: 80px;" src="/static/images/head.png">
+              <!--<input id="imgSelect" type="file" style="position: absolute;height: 80px;width: 80px;top: 0;left: 0;opacity: 0">-->
+              {{ obj.avatar }}
+          </div>  
+            
           <div class="form-group">
             <label class="col-sm-2 control-label">用户名</label>
             <div class="col-sm-10">
@@ -50,6 +38,12 @@
             <label class="col-sm-2 control-label">密码</label>
             <div class="col-sm-10">
               {{ obj.password }}  {{ obj.errors.password.0 }}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">确认密码</label>
+            <div class="col-sm-10">
+              {{ obj.password2 }}  {{ obj.errors.password2.0 }}
             </div>
           </div>
           <div class="form-group">
@@ -64,28 +58,41 @@
               {{ obj.email }} {{ obj.errors.email.0 }}
             </div>
           </div>
-          <div class="form-group" style="display: none;">
-            <label class="col-sm-2 control-label">头像</label>
-            <div class="col-sm-10">
-                <input type="text" >
-            </div>
-          </div>
+          <div class="form-group">
+                <label class="col-sm-2 control-label">验证码</label>
+                <div class="col-sm-5">
+                  {{ obj.code }} {{ obj.errors.code.0 }}
+                </div>
+                <div class="col-sm-5">
+                  <img onclick="changeCode(this);" style="width: 120px;height: 30px;" src="/check_code/" title="点击更新图片">
+                </div>
+              </div>
+
+{#          <div class="form-group" style="display: none;">#}
+{#            <label class="col-sm-2 control-label">头像</label>#}
+{#            <div class="col-sm-10">#}
+{#                <input type="text" >#}
+{#            </div>#}
+{#          </div>#}
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <input type="submit" class="btn btn-default" value="注册">
             </div>
           </div>
         </form>
+        <!--  orm + iframe上传预览
         <form id="f2"  method="POST" action="/register/" target="ifr" enctype="multipart/form-data">
             {% csrf_token %}
             <iframe id="ifr" name="ifr" style="display: none;"></iframe>
             <input type="file" class="avatar" name="avatar" onchange="upload3()">
             <input class="upload" type="button" value="上传" onclick="upload3();">
         </form>
-        <div id="container2"></div>
+        <div id="container2"></div>-->
     </div>
     <script src="/static/jquery-1.12.4.js"></script>
+    <script src="/static/jquery.cookie.js"></script>
     <script>
+        /*   form + iframe上传预览
         function upload3() {
             document.getElementById('ifr').onload = loadIframe;
             document.getElementById('f2').submit();
@@ -96,7 +103,75 @@
             var tag = document.createElement('img');
             tag.src = "/" + content;
             document.getElementById('container2').appendChild(tag)
+        }*/
+
+        $(function () {
+            bindAvatar();
+        });
+
+        function bindAvatar() {
+            if (window.URL.createObjectURL){
+                bindAvatar2();
+            }else if(window.FileReader){
+                bindAvatar3();
+            }else{
+                bindAvatar1()
+            }
         }
+
+        /*ajax 上传*/
+        function bindAvatar1() {
+            $('#imgSelect').change(function () {
+                var formData = new FormData();
+                formData.append('avatar',$(this)[0].files[0]);
+                var token = $.cookie('csrftoken');
+
+                $.ajax({
+                    url:'/register/',
+                    type:'POST',
+                    headers:{'X-CSRFToken':token},
+                    data:formData,
+                    contentType:false,
+                    processData:false,
+                    success:function (arg) {
+                        console.log(arg)
+                    }
+                })
+            })
+        }
+
+        /*本地上传预览1*/
+        function bindAvatar2() {
+            $('#imgSelect').change(function () {
+                /* 相同, 不需要两次转换
+                console.log(this);
+                console.log($(this)[0]);*/
+                var obj = $(this)[0].files[0];
+                var v = window.URL.createObjectURL(obj);
+                $('#previewImg').attr('src',v);
+                $('#previewImg').load(function () {
+                    window.URL.revokeObjectURL(v);
+                })
+            })
+        }
+
+        /*本地上传预览2*/
+        function bindAvatar3() {
+            $('#imgSelect').change(function () {
+                var obj = this.files[0];
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#previewImg').attr('src',this.result);
+                };
+                reader.readAsDataURL(obj);
+            })
+        }
+
+        /*刷新图片*/
+        function changeCode(ths) {
+            ths.src = ths.src + "?";
+        }
+
     </script>
 </body>
 </html>

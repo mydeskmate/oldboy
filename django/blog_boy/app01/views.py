@@ -114,41 +114,47 @@ def check_code(request):
     return HttpResponse(stream.getvalue())
 
 
-class RegisterForm(Form):
-    username = fields.CharField(
-        max_length=18,
-        min_length=3,
-        error_messages={
-            'required': '用户名不能为空',
-            'min_length': '不能少于3位',
-            'max_length': '不能多于18位'
-        },
-        widget=widgets.TextInput(attrs={'class': 'form-control'})
-    )
-    password = fields.CharField(
-        min_length=6,
-        error_messages={
-            'required': '密码不能为空',
-            'min_length': '密码不能少于8位'
-        },
-        widget=widgets.PasswordInput(attrs={'class': 'form-control'})
-    )
-    nickname = fields.CharField(max_length=32,widget=widgets.TextInput(attrs={'class': 'form-control'}))
-    email = fields.EmailField(widget=widgets.EmailInput(attrs={'class': 'form-control'}))
+# self  放弃
+# class RegisterForm(Form):
+#     username = fields.CharField(
+#         max_length=18,
+#         min_length=3,
+#         error_messages={
+#             'required': '用户名不能为空',
+#             'min_length': '不能少于3位',
+#             'max_length': '不能多于18位'
+#         },
+#         widget=widgets.TextInput(attrs={'class': 'form-control'})
+#     )
+#     password = fields.CharField(
+#         min_length=6,
+#         error_messages={
+#             'required': '密码不能为空',
+#             'min_length': '密码不能少于8位'
+#         },
+#         widget=widgets.PasswordInput(attrs={'class': 'form-control'})
+#     )
+#     nickname = fields.CharField(max_length=32,widget=widgets.TextInput(attrs={'class': 'form-control'}))
+#     email = fields.EmailField(widget=widgets.EmailInput(attrs={'class': 'form-control'}))
+
+from app01.forms import RegisterForm
+from django.core.exceptions import NON_FIELD_ERRORS
 
 import os
 def register(request):
     if request.method == 'GET':
-        obj = RegisterForm()
+        obj = RegisterForm(request)
         return render(request,'register.html',{'obj':obj})
     else:
-        file_obj = request.FILES.get('avatar')
-        file_path = os.path.join('static',file_obj.name)
-        with open(file_path,'wb') as f:
-            for chunk in file_obj.chunks():
-                f.write(chunk)
-        print(file_path)
-        return HttpResponse(file_path)
+        obj = RegisterForm(request,request.POST,request.FILES)
+        if obj.is_valid():
+            pass
+        else:
+            # print(obj.errors['__all__'])
+            # print(obj.errors[NON_FIELD_ERRORS])
+            pass
+        return render(request,'register.html',{'obj':obj})
+
 
 
 
