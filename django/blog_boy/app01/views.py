@@ -156,5 +156,15 @@ def register(request):
         return render(request,'register.html',{'obj':obj})
 
 
+def home(request,site):
+    blog = models.Blog.objects.filter(site=site).first()
+    if not blog:
+        return redirect('/')
+
+    obj = models.UserInfo.objects.filter(username='hansj').first()
+    print(obj.blog.site)
+    return render(request,'han.html')
+
+
 
 
