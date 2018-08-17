@@ -160,10 +160,7 @@ def home(request,site):
     blog = models.Blog.objects.filter(site=site).first()
     if not blog:
         return redirect('/')
-
-    obj = models.UserInfo.objects.filter(username='hansj').first()
-    print(obj.blog.site)
-    return render(request,'han.html')
+    return render(request,'han.html',{'blog':blog})
 
 
 
