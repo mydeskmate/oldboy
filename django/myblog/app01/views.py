@@ -1,10 +1,34 @@
 from django.shortcuts import render,redirect,HttpResponse
 from app01 import models
+from app01 import forms
 
 # Create your views here.
 def login(request):
     return render(request,'login.html')
 
+def register(request):
+    """
+    用户注册
+    :param request:
+    :return:
+    """
+    if request.method == 'GET':
+        obj = forms.RegisterForm()
+        return render(request,'register.html',{'obj':obj})
+
+def check_code(request):
+    """
+    验证码
+    :param request:
+    :return:
+    """
+    from io import BytesIO
+    from utils.random_check_code import rd_check_code
+    img,code = rd_check_code()
+    stream = BytesIO()
+    img.save(stream,'png')
+    request.session['code'] = code
+    return HttpResponse(stream.getvalue())
 
 def index(request,*args,**kwargs):
     """
