@@ -6,21 +6,70 @@
     <link rel="stylesheet" href="/static/plugin/bootstrap-3.3.7-dist/css/bootstrap.css">
     <link rel="stylesheet" href="/static/plugin/font-awesome-4.7.0/css/font-awesome.css">
     <link rel="stylesheet" href="/static/css/common.css">
+    <style>
+        #header {
+            {#width: 1160px;#}
+            height: 50px;
+            background: #46b8da;
+        }
+        .title {
+            width: 60px;
+            height: 50px;
+            line-height: 50px;
+        }
+        #header .menus a{
+            display: inline-block;
+            {#height: 50px;#}
+            margin-top: 33px;
+
+
+        }
+    </style>
     {% block css %}
 
     {% endblock %}
 </head>
 <body>
-    <div>
-        <div class="left">Mr Seven</div>
-        <div class="right">
+    <div id="header">
+        <div class="left title">Mr Seven</div>
+        <div class="right menus">
             <a href="">首页</a>
             <a href="">个人首页</a>
             <a href="">管理</a>
         </div>
     </div>
     <div>
-        <div></div>
+        <div class="left" style="width: 300px;">
+            公告
+            <ul>
+                <li>昵称: {{ blog.user.nickname }}</li>
+                <li>粉丝:{{ blog.user.fans.count }}</li>
+                <li>关注:{{ blog.user.f.count }}</li>
+                <li>邮箱:{{ blog.user.email }}</li>
+            </ul>
+            <div>
+            标签
+            </div>
+            <div>
+                分类
+            </div>
+            <div>
+                时间
+            </div>
+        </div>
+        <div class="left" style="width: 600px;">
+            {% for row in blog.article_set.all %}
+                <div>
+                    <h3>{{ row.title }}</h3>
+                    <div>{{ row.summary }}</div>
+                    <div>
+                        {{ row.create_time }}  阅读({{ row.read_count }}) 评论({{ row.comment_count }})
+                        <a href="">编辑</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
     </div>
 
 
