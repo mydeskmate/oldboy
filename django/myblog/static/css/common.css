@@ -1,0 +1,16 @@
+.left{
+    float: left;
+}
+.no-radius{
+    border-radius: 0!important;
+}
+.article_list .article-item .art_body img{
+    width: 60px;
+    height: 60px;
+}
+.login_box{
+    width: 600px;
+    margin: 0 auto;
+    margin-top: 80px;
+    padding: 20px;
+}
