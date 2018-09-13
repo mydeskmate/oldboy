@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,HttpResponse
 from app01 import models
-from app01 import forms
+from app01.forms import RegisterForm
 
 # Create your views here.
 def login(request):
@@ -13,8 +13,16 @@ def register(request):
     :return:
     """
     if request.method == 'GET':
-        obj = forms.RegisterForm()
+        obj = RegisterForm(request)
         return render(request,'register.html',{'obj':obj})
+    else:
+        obj = RegisterForm(request,request.POST)
+        if obj.is_valid():
+            pass
+        else:
+            pass
+        return render(request,'register.html',{'obj':obj})
+
 
 def check_code(request):
     """
