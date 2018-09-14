@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^all/(?P<type_id>\d+)/',views.index),
     url(r'^register/',views.register),
     url(r'^check_code/',views.check_code),
+    url(r'^(\w+)/',views.home),
     url(r'^',views.index)
 ]

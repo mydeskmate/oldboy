@@ -56,8 +56,20 @@
                 <div>
                     <a href="">张三</a>
                 </div>
-                
             </div>
+            {% for article in article_list %}
+                <div class="article-item">
+                <h3><a href="">{{ article.title }}</a></h3>
+                <div class="art_body clearfix">
+                    <a class="left"><img src="{{ article.blog.user.avatar }}" alt=""></a>
+                    {{ article.summary }}
+                </div>
+                <div>
+                    <a href="">{{ article.blog.user.nickname }}</a>
+                </div>
+            </div>
+            {% endfor %}
+
         </div>
     </div>
     <div class="col-md-4">

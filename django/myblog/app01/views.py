@@ -65,3 +65,20 @@ def index(request,*args,**kwargs):
               'type_id':type_id
           }
     )
+
+def home(request,site):
+    """
+    访问博客主页
+    :param request:
+    :param site: 个人博客后缀
+    :return:
+    """
+    blog = models.Blog.objects.filter(site=site).first()
+    # 访问博客不存在,跳转到主页
+    if not blog:
+        return redirect('/')
+
+    obj = models.UserInfo.objects.filter(username='sw').first()
+    print(obj.blog.site)
+
+    return HttpResponse('......')

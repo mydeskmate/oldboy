@@ -5,15 +5,33 @@ from django.core.exceptions import ValidationError
 
 class RegisterForm(Form):
     username = fields.CharField(
+        min_length=5,
+        max_length=16,
+        error_messages={
+            'required':'用户名不能为空',
+            'min_length':'用户名不能少于5位',
+            'max_length':'用户名不能多于16位'
+        },
         widget=widgets.TextInput(attrs={'class':'form-control'})
     )
     password = fields.CharField(
+        min_length=6,
+        error_messages={
+            'required':'密码不能为空',
+            'min_length':'密码不能少于6位'
+        },
         widget=widgets.PasswordInput(attrs={'class':'form-control'})
     )
     password2 = fields.CharField(
+        error_messages={
+            'required':'密码不能为空'
+        },
         widget=widgets.PasswordInput(attrs={'class':'form-control'})
     )
     code = fields.CharField(
+        error_messages={
+            'required':'请输入验证码'
+        },
         widget=widgets.TextInput(attrs={'class':'form-control'})
     )
 
@@ -38,3 +56,14 @@ class RegisterForm(Form):
         if input_code.upper() == session_code.upper():
             return input_code                     #需要返回
         raise ValidationError('验证码错误')
+
+    def clean(self):
+        """
+        验证两次输入的密码是否一致
+        :return:
+        """
+        p1 = self.cleaned_data.get('password')
+        p2 = self.cleaned_data.get('password2')
+        if p1 == p2:
+            return None
+        self.add_error('password2',ValidationError('密码不一致'))
