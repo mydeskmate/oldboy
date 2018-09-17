@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 class RegisterForm(Form):
     username = fields.CharField(
         min_length=5,
-        max_length=16,
+        max_length=32,
         error_messages={
             'required':'用户名不能为空',
             'min_length':'用户名不能少于5位',
@@ -16,9 +16,11 @@ class RegisterForm(Form):
     )
     password = fields.CharField(
         min_length=6,
+        max_length=32,
         error_messages={
             'required':'密码不能为空',
-            'min_length':'密码不能少于6位'
+            'min_length':'密码不能少于6位',
+            'max_length':'密码不能多于32位'
         },
         widget=widgets.PasswordInput(attrs={'class':'form-control'})
     )
@@ -64,6 +66,6 @@ class RegisterForm(Form):
         """
         p1 = self.cleaned_data.get('password')
         p2 = self.cleaned_data.get('password2')
-        if p1 == p2:
+        if p1 == p2 or p1 is None:  # None为password出错的情况
             return None
         self.add_error('password2',ValidationError('密码不一致'))

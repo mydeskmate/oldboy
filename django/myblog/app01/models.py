@@ -11,7 +11,7 @@ class UserInfo(models.Model):
     nickname = models.CharField(verbose_name='昵称',max_length=32)
     email = models.EmailField(verbose_name='邮箱',unique=True)
 
-    avatar = models.ImageField(verbose_name='头像',null=True)
+    avatar = models.ImageField(verbose_name='头像',null=True,upload_to='static/imgs')
     create_time = models.DateTimeField(verbose_name='创建时间',auto_now_add=True)
     fans = models.ManyToManyField(verbose_name='粉丝',
                                   to='UserInfo',
