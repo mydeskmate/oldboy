@@ -20,6 +20,9 @@ class UserInfo(models.Model):
                                   related_name='f'
                                   )
 
+    def __str__(self):
+        return self.nickname
+
 class UserFans(models.Model):
     """
     互粉关系表
@@ -38,10 +41,13 @@ class Blog(models.Model):
     博客信息
     """
     nid = models.BigAutoField(primary_key=True)
-    title = models.CharField(verbose_name='个人博客标题',max_length=64),
+    title = models.CharField(verbose_name='个人博客标题',max_length=64,default="春暖花开")
     site = models.CharField(verbose_name='个人博客后缀',max_length=32,unique=True)
     theme = models.CharField(verbose_name='博客主题',max_length=32)
     user = models.OneToOneField(to="UserInfo",to_field='nid',on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "%s--------%s" %(self.title,self.user.nickname)
 
 class Category(models.Model):
     """
@@ -51,10 +57,17 @@ class Category(models.Model):
     title = models.CharField(verbose_name='分类标题',max_length=32)
     blog = models.ForeignKey(verbose_name='所属博客',to='Blog',to_field='nid',on_delete=models.CASCADE)
 
+    def __str__(self):
+        return "%s-%s" %(self.blog.title,self.title)
+
 class Tag(models.Model):
     nid = models.AutoField(primary_key=True)
     title = models.CharField(verbose_name='标签名称',max_length=32)
     blog = models.ForeignKey(verbose_name='所属博客',to='Blog',to_field='nid',on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "%s-%s" %(self.blog.title,self.title)
+
 
 class Article(models.Model):
     nid = models.BigAutoField(primary_key=True)
@@ -85,12 +98,18 @@ class Article(models.Model):
     ]
     article_type_id = models.IntegerField(choices=type_choices,default=None)
 
+    def __str__(self):
+        return "%s-%s" %(self.blog.title,self.title)
+
 class ArticleDetail(models.Model):
     """
     文章详细表
     """
     content = models.TextField(verbose_name='文章内容')
     article = models.OneToOneField(verbose_name='所属文章',to='Article',to_field='nid',on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.article.title
 
 
 class Article2Tag(models.Model):
@@ -105,6 +124,8 @@ class Article2Tag(models.Model):
             ('article','tag')
         ]
 
+    def __str__(self):
+        return "%s-%s" %(self.tag.title,self.article.title)
 
 class UpDown(models.Model):
     """

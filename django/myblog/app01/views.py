@@ -1,6 +1,9 @@
 from django.shortcuts import render,redirect,HttpResponse
 from app01 import models
 from app01.forms import RegisterForm
+from django.db.models import Count
+from django.db.models import F
+import json
 
 # Create your views here.
 def login(request):
@@ -78,7 +81,32 @@ def home(request,site):
     if not blog:
         return redirect('/')
 
-    obj = models.UserInfo.objects.filter(username='sw').first()
-    print(obj.blog.site)
+    # 按照分类,标签,时间分类
+    # 分类
+    category_list = models.Article.objects.filter(blog=blog).values("category_id","category__title").annotate(ct=Count("nid"))
 
-    return HttpResponse('......')
+    # 标签
+    tag_list = models.Article2Tag.objects.filter(article__blog=blog).values('tag_id',"tag__title").annotate(ct=Count("id"))
+
+    # 时间
+    date_list = models.Article.objects.filter(blog=blog).extra(select={'ctime':"strftime('%%Y-%%m',create_time)"}).values('ctime').annotate(ct=Count("nid"))
+
+    # 显示文章, 此处未分页 ,稍后处理
+    article_list = models.Article.objects.all()
+
+    # 博客主题
+
+    return render(
+        request,
+        'home.html',
+        {
+            'blog':blog,
+            'category_list':category_list,
+            'tag_list':tag_list,
+            'date_list':date_list,
+            'article_list':article_list,
+        }
+    )
+
+def filter(request,*args):
+    return HttpResponse('.....')
