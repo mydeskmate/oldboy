@@ -108,5 +108,116 @@ def home(request,site):
         }
     )
 
-def filter(request,*args):
-    return HttpResponse('.....')
+def filter(request,site,key,val):
+    blog = models.Blog.objects.filter(site=site).first()
+    if not blog:
+        return redirect('/')
+
+    # 按照分类,标签,时间分类
+    # 分类
+    category_list = models.Article.objects.filter(blog=blog).values("category_id", "category__title").annotate(
+        ct=Count("nid"))
+
+    # 标签
+    tag_list = models.Article2Tag.objects.filter(article__blog=blog).values('tag_id', "tag__title").annotate(
+        ct=Count("id"))
+
+    # 时间
+    date_list = models.Article.objects.filter(blog=blog).extra(
+        select={'ctime': "strftime('%%Y-%%m',create_time)"}).values('ctime').annotate(ct=Count("nid"))
+
+    # 根据分类,标签,时间筛选文章
+    if key == 'category':
+        article_list = models.Article.objects.filter(blog=blog,category_id=val)
+    elif key == 'tag':
+        # 直接跨到tag表
+        article_list = models.Article.objects.filter(blog=blog,tags__nid=val)
+    else:
+        article_list = models.Article.objects.filter(blog=blog).extra(where=["strftime('%%Y-%%m',create_time)=%s"],params=[val,])
+
+    return render(
+        request,
+        'filter.html',
+        {
+            'blog':blog,
+            'category_list':category_list,
+            'tag_list':tag_list,
+            'date_list':date_list,
+            'article_list':article_list,
+        }
+    )
+
+def article(request,site,nid):
+    blog = models.Blog.objects.filter(site=site).first()
+    if not blog:
+        return redirect('/')
+
+    # 按照分类,标签,时间分类
+    # 分类
+    category_list = models.Article.objects.filter(blog=blog).values("category_id", "category__title").annotate(
+        ct=Count("nid"))
+
+    # 标签
+    tag_list = models.Article2Tag.objects.filter(article__blog=blog).values('tag_id', "tag__title").annotate(
+        ct=Count("id"))
+
+    # 时间
+    date_list = models.Article.objects.filter(blog=blog).extra(
+        select={'ctime': "strftime('%%Y-%%m',create_time)"}).values('ctime').annotate(ct=Count("nid"))
+
+    # 获取指定文章
+    obj = models.Article.objects.filter(blog=blog,nid=nid).first()
+
+    return render(
+        request,
+        'article.html',
+        {
+            'blog': blog,
+            'category_list': category_list,
+            'tag_list': tag_list,
+            'date_list': date_list,
+            'obj':obj,
+        }
+    )
+
+def up(request):
+    """
+    处理赞和踩
+    :param request:
+    :return: 返回赞或踩得status值  1 赞  2 踩  0 表示出错
+    """
+    respone = {'status':0,'msg':None}
+
+    try:
+        user_id = request.session.get('user_id')
+        article_id = request.POST.get('nid')
+        val = int(request.POST.get('val'))
+        obj = models.UpDown.objects.filter(user_id=user_id,article_id=article_id).first()
+        if obj:
+            # 已经赞或者踩过
+            print(1111)
+            pass
+        else:
+            print(2222)
+            from django.db import transaction
+            with transaction.atomic():
+                print(val)
+                if val:
+                    print(4444)
+                    print(user_id)
+                    print(article_id)
+                    models.UpDown.objects.create(user_id=user_id,article_id=article_id,up=True)
+                    models.Article.objects.filter(nid=article_id).update(up_count=F('up_count')+1)
+                    respone['status'] = 1
+                else:
+                    print(3333)
+                    print(user_id)
+                    print(article_id)
+                    models.UpDown.objects.create(user_id=user_id,article_id=article_id,up=False)
+                    models.Article.objects.filter(nid=article_id).update(down_count=F('down_count')+1)
+                    respone['status'] = 2
+
+    except Exception as e:
+        respone['msg'] = str(e)
+    print(respone)
+    return HttpResponse(json.dumps(respone))

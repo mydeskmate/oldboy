@@ -81,7 +81,7 @@ class Article(models.Model):
 
     blog = models.ForeignKey(verbose_name='所属博客', to='Blog',to_field='nid',on_delete=models.CASCADE)
     category = models.ForeignKey(verbose_name='个人文章类型', to='Category',to_field='nid',null=True,on_delete=models.CASCADE)
-    tag = models.ManyToManyField(
+    tags = models.ManyToManyField(
         to='Tag',
         through='Article2Tag',
         through_fields=('article','tag')
@@ -129,11 +129,11 @@ class Article2Tag(models.Model):
 
 class UpDown(models.Model):
     """
-    文章顶或踩
+    文章顶或踩  True 赞  False 踩
     """
     article = models.ForeignKey(verbose_name='文章', to='Article',to_field='nid',on_delete=models.CASCADE)
     user = models.ForeignKey(verbose_name='赞或踩用户', to='UserInfo',to_field='nid',on_delete=models.CASCADE)
-    up = models.BooleanField(verbose_name='是否赞')
+    up = models.BooleanField(verbose_name='赞或踩')
 
     class Meta:
         unique_together = [

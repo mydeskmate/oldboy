@@ -41,13 +41,46 @@
         </ul>
     </div>
 
-    <div class="article_list">
-        {% for article in article_list %}
-            <div>
-                <a href="/{{ blog.site }}/{{ article.nid }}.html">{{ article.title }}</a>
-                <div>{{ article.summary }}</div>
-            </div>
-        {% endfor %}
+    <div>
+        <h3><a href="">{{ obj.title }}</a></h3>
+        {{ obj.articledetail.content|safe }}
     </div>
+    <!-- 1 表示赞  0 表示踩 -->
+    <a onclick="updown(this,{{ ojb.nid }},1);">
+        <span>赞</span>
+        <i>{{ obj.up_count }}</i>
+    </a>
+    <a onclick="updown(this,{{ obj.nid }},0)">
+        <span>踩</span>
+        <i>{{ obj.down_count }}</i>
+    </a>
+    <script src="/static/plugin/jquery-1.12.4.js"></script>
+    <script>
+        $(function () {
+
+        });
+
+        function updown(ths,nid,val) {
+            $.ajax({
+                url:'/up.html',
+                data:{'val':val,'nid':nid,'csrfmiddlewaretoken':'{{ csrf_token }}'},
+                type:'POST',
+                dataType:'JSON',
+                success:function (arg) {
+                    if(arg.status == 1){
+                        //赞
+                        console.log(arg.status)
+                    }else if(arg.status == 2){
+                        //踩
+                        console.log(arg.status)
+
+                    }else{
+                        //显示错误信息
+                        console.log(arg.msg)
+                    }
+                }
+            })
+        }
+    </script>
 </body>
 </html>
