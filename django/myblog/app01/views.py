@@ -1,13 +1,45 @@
 from django.shortcuts import render,redirect,HttpResponse
 from app01 import models
 from app01.forms import RegisterForm
+from app01.forms import LoginForm
 from django.db.models import Count
 from django.db.models import F
 import json
 
 # Create your views here.
 def login(request):
-    return render(request,'login.html')
+    """
+    登录
+    :param request:
+    :return:
+    """
+    if request.method == "GET":
+        obj = LoginForm()
+        return render(request, 'login.html',{'obj':obj})
+    else:
+        obj = LoginForm(request.POST)
+        if obj.is_valid():
+            res = models.UserInfo.objects.filter(**obj.cleaned_data).first()
+            if res:
+                request.session['user_info'] = {'username':res.username,'nickname':res.nickname}
+                # 此处存放多个session会好一点， 但如果存放的数据比较多， 放在字典里面比较好
+                # request.session['username'] = res.username
+                # request.session['nickname'] = res.nickname
+                return redirect('/')
+            else:
+                return render(request,'login.html',{'obj':obj,'msg':'用户名或密码错误'})
+        else:
+            return render(request,'login.html',{'obj':obj})
+
+def logout(request):
+    """
+    退出登录
+    :param request:
+    :return:
+    """
+    if request.session.get('user_info'):
+        request.session.clear()
+    return redirect('/index.html/')
 
 def register(request):
     """
@@ -49,6 +81,16 @@ def index(request,*args,**kwargs):
     :param kwargs: 接受类别id
     :return:
     """
+    # 获取session 判断是否登录
+    user_info = request.session.get('user_info')
+    if not user_info:
+        login_stat = 0
+        username = None
+    else:
+        login_stat = 1
+        username = user_info.get('username')
+        nickname = user_info.get('nickname')
+
     type_choice_list = models.Article.type_choices
 
     #分类查找文章
@@ -59,13 +101,19 @@ def index(request,*args,**kwargs):
         condition['article_type_id'] = type_id
     article_list = models.Article.objects.filter(**condition)
 
+    # 获取该用户的博客信息
+    blog = models.Blog.objects.filter(user__username=username).first()
+
     return render(
         request,
         'index.html',
           {
               'type_choice_list': type_choice_list,
               'article_list':article_list,
-              'type_id':type_id
+              'type_id':type_id,
+              'login_stat':login_stat,
+              'user_info':user_info,
+              'blog':blog,
           }
     )
 

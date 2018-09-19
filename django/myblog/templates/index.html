@@ -37,10 +37,19 @@
             {% endif %}
         {% endfor %}
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="/login/">登陆</a></li>
-        <li><a href="/register/">注册</a></li>
+    {% if login_stat %}
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/{{ blog.site }}/">{{ user_info.nickname }}</a></li>
+            <li><a href="/{{ blog.site }}/">我的博客</a></li>
+            <li><a href="/{{ blog.site }}/back/">管理</a></li>
+            <li><a href="/logout/">退出</a></li>
       </ul>
+    {% else %}
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/login/">登陆</a></li>
+            <li><a href="/register/">注册</a></li>
+      </ul>
+    {% endif %}
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>

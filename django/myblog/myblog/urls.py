@@ -22,6 +22,7 @@ from app01 import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^login/',views.login),
+    url(r'^logout/',views.logout),
     url(r'^all/(?P<type_id>\d+)/',views.index),
     url(r'^login/',views.login),
     url(r'^register/',views.register),
