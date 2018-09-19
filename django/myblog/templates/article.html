@@ -46,13 +46,13 @@
         {{ obj.articledetail.content|safe }}
     </div>
     <!-- 1 表示赞  0 表示踩 -->
-    <a onclick="updown(this,{{ ojb.nid }},1);">
+    <a onclick="updown(this,{{ obj.nid }},1);">
         <span>赞</span>
-        <i>{{ obj.up_count }}</i>
+        <i class="up">{{ obj.up_count }}</i>
     </a>
     <a onclick="updown(this,{{ obj.nid }},0)">
         <span>踩</span>
-        <i>{{ obj.down_count }}</i>
+        <i class="down">{{ obj.down_count }}</i>
     </a>
     <script src="/static/plugin/jquery-1.12.4.js"></script>
     <script>
@@ -69,11 +69,11 @@
                 success:function (arg) {
                     if(arg.status == 1){
                         //赞
-                        console.log(arg.status)
+                        // 刷新页面，效果不好location.href = "/{{ blog.site }}/{{ obj.nid }}.html"
+                        $('.up').text({{ obj.up_count }} + 1);
                     }else if(arg.status == 2){
                         //踩
-                        console.log(arg.status)
-
+                        $('.down').text({{ obj.down_count }} + 1)
                     }else{
                         //显示错误信息
                         console.log(arg.msg)

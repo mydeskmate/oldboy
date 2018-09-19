@@ -21,7 +21,7 @@ def login(request):
         if obj.is_valid():
             res = models.UserInfo.objects.filter(**obj.cleaned_data).first()
             if res:
-                request.session['user_info'] = {'username':res.username,'nickname':res.nickname}
+                request.session['user_info'] = {'user_id':res.nid,'username':res.username,'nickname':res.nickname}
                 # 此处存放多个session会好一点， 但如果存放的数据比较多， 放在字典里面比较好
                 # request.session['username'] = res.username
                 # request.session['nickname'] = res.nickname
@@ -216,6 +216,25 @@ def article(request,site,nid):
     # 获取指定文章
     obj = models.Article.objects.filter(blog=blog,nid=nid).first()
 
+    ############评论###############
+    msg_list = [
+        {'id': 1, 'content': '写的太好了', 'parent_id': None},
+        {'id': 2, 'content': '你说得对', 'parent_id': None},
+        {'id': 3, 'content': '顶楼上', 'parent_id': None},
+        {'id': 4, 'content': '你眼瞎吗', 'parent_id': 1},
+        {'id': 5, 'content': '我看是', 'parent_id': 4},
+        {'id': 6, 'content': '鸡毛', 'parent_id': 2},
+        {'id': 7, 'content': '你是没呀', 'parent_id': 5},
+        {'id': 8, 'content': '惺惺惜惺惺想寻', 'parent_id': 3},
+    ]
+    msg_list_dict = {}
+    for item in msg_list:
+        item['child'] = []  #添加空列表， 用来添加子评论
+        msg_list_dict[item['id']] = item
+
+    #### here
+
+
     return render(
         request,
         'article.html',
@@ -237,35 +256,29 @@ def up(request):
     respone = {'status':0,'msg':None}
 
     try:
-        user_id = request.session.get('user_id')
+        user_id = request.session.get('user_info').get('user_id')
         article_id = request.POST.get('nid')
         val = int(request.POST.get('val'))
         obj = models.UpDown.objects.filter(user_id=user_id,article_id=article_id).first()
         if obj:
             # 已经赞或者踩过
-            print(1111)
             pass
         else:
-            print(2222)
             from django.db import transaction
             with transaction.atomic():
-                print(val)
                 if val:
-                    print(4444)
-                    print(user_id)
-                    print(article_id)
+                    # print(user_id)
+                    # print(article_id)
                     models.UpDown.objects.create(user_id=user_id,article_id=article_id,up=True)
                     models.Article.objects.filter(nid=article_id).update(up_count=F('up_count')+1)
                     respone['status'] = 1
                 else:
-                    print(3333)
-                    print(user_id)
-                    print(article_id)
+                    # print(3333)
+                    # print(user_id)
+                    # print(article_id)
                     models.UpDown.objects.create(user_id=user_id,article_id=article_id,up=False)
                     models.Article.objects.filter(nid=article_id).update(down_count=F('down_count')+1)
                     respone['status'] = 2
-
     except Exception as e:
         respone['msg'] = str(e)
-    print(respone)
     return HttpResponse(json.dumps(respone))

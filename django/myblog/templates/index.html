@@ -68,7 +68,7 @@
             </div>
             {% for article in article_list %}
                 <div class="article-item">
-                <h3><a href="">{{ article.title }}</a></h3>
+                <h3><a href="/{{ article.blog.site }}/{{ article.nid }}.html">{{ article.title }}</a></h3>
                 <div class="art_body clearfix">
                     <a class="left"><img src="{{ article.blog.user.avatar }}" alt=""></a>
                     {{ article.summary }}
