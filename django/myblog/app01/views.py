@@ -227,13 +227,25 @@ def article(request,site,nid):
         {'id': 7, 'content': '你是没呀', 'parent_id': 5},
         {'id': 8, 'content': '惺惺惜惺惺想寻', 'parent_id': 3},
     ]
+
+    # 将列表中的每一项放到字典中,提高访问效率
     msg_list_dict = {}
     for item in msg_list:
         item['child'] = []  #添加空列表， 用来添加子评论
         msg_list_dict[item['id']] = item
 
-    #### here
-
+    #### msg_list_dict用于查找,msg_list
+    result = []
+    for item in msg_list:
+        pid = item['parent_id']
+        if pid:
+            msg_list_dict[pid]['child'].append(item)
+        else:
+            result.append(item)
+    print(result)
+    ################获取评论字符串#####################
+    from utils.comment import comment_tree
+    comment_str = comment_tree(result)
 
     return render(
         request,
@@ -244,6 +256,7 @@ def article(request,site,nid):
             'tag_list': tag_list,
             'date_list': date_list,
             'obj':obj,
+            'comment_str':comment_str,
         }
     )
 

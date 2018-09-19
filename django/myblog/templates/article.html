@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="/static/css/theme/{{ blog.theme }}.css">
+    <style>
+        .comment{
+            margin-left: 30px;
+        }
+    </style>
 </head>
 <body>
     <div class="info">
@@ -54,6 +59,8 @@
         <span>踩</span>
         <i class="down">{{ obj.down_count }}</i>
     </a>
+    <h3>评论</h3>
+    {{ comment_str|safe }}
     <script src="/static/plugin/jquery-1.12.4.js"></script>
     <script>
         $(function () {
