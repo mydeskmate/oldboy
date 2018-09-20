@@ -22,6 +22,7 @@ def login(request):
             res = models.UserInfo.objects.filter(**obj.cleaned_data).first()
             if res:
                 request.session['user_info'] = {'user_id':res.nid,'username':res.username,'nickname':res.nickname}
+                request.session['blog_id'] = res.blog.nid
                 # 此处存放多个session会好一点， 但如果存放的数据比较多， 放在字典里面比较好
                 # request.session['username'] = res.username
                 # request.session['nickname'] = res.nickname
@@ -295,3 +296,39 @@ def up(request):
     except Exception as e:
         respone['msg'] = str(e)
     return HttpResponse(json.dumps(respone))
+
+def search(request,**kwargs):
+    """
+    后台文章管理中，根据分类，个人分类，标签搜索相应条件下的文章
+    :param request:
+    :return:
+    """
+    blog_id = request.session.get('blog_id')
+
+    # 文章筛选条件，默认为空表示全部
+    condition = {}
+    for k,v in kwargs.items():
+        kwargs[k] = int(v)    # 需类型转换  否则前端比较是不相等
+        if v != '0':       #筛选掉为0的条件
+            condition[k] = v
+
+    condition['blog_id'] = blog_id
+    article_list = models.Article.objects.filter(**condition)
+    #系统分类
+    type_list = models.Article.type_choices
+    #个人分类
+    category_list = models.Category.objects.filter(blog_id=blog_id)
+    #个人标签
+    tag_list = models.Tag.objects.filter(blog_id=blog_id)
+
+    return render(
+        request,
+        'search.html',
+        {
+            'type_list':type_list,
+            'category_list':category_list,
+            'tag_list':tag_list,
+            'article_list':article_list,
+            'kwargs':kwargs,
+        }
+    )

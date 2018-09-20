@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .condition{
+            margin-bottom: 4px;
+        }
+        .condition a{
+            display: inline-block;
+            padding: 5px;
+        }
+        .condition a.active{
+            background-color: #8c8c8c;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h3>搜索条件</h3>
+    <div class="condition">
+        系统分类：
+        {% if kwargs.article_type_id == 0 %}
+            <a class="active" href="article-0-{{ kwargs.category_id }}-{{ kwargs.tags__nid }}.html">全部</a>
+        {% else %}
+            <a href="article-0-{{ kwargs.category_id }}-{{ kwargs.tags__nid }}.html">全部</a>
+        {% endif %}
+
+        {% for row in type_list %}
+            {% if row.0 == kwargs.article_type_id %}
+                <a class="active" href="article-{{ row.0 }}-{{ kwargs.category_id }}-{{ kwargs.tags__nid }}.html">{{ row.1 }}</a>
+            {% else %}
+                <a href="article-{{ row.0 }}-{{ kwargs.category_id }}-{{ kwargs.tags__nid }}.html">{{ row.1 }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="condition">
+        个人分类：
+        {% if kwargs.category_id == 0 %}
+            <a class="active" href="article-{{ kwargs.article_type_id }}-0-{{ kwargs.tags__nid }}.html">全部</a>
+        {% else %}
+            <a href="article-{{ kwargs.article_type_id }}-0-{{ kwargs.tags__nid }}.html">全部</a>
+        {% endif %}
+
+        {% for row in category_list %}
+            {% if row.nid == kwargs.category_id %}
+                <a class="active" href="article-{{ kwargs.article_type_id }}-{{ row.nid }}-{{ kwargs.tags__nid }}.html">{{ row.title }}</a>
+            {% else %}
+                <a href="article-{{ kwargs.article_type_id }}-{{ row.nid }}-{{ kwargs.tags__nid }}.html">{{ row.title }}</a>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+    <div class="condition">
+        个人标签：
+        {% if kwargs.tags__nid == 0 %}
+            <a class="active" href="article-{{ kwargs.article_type_id }}-{{ kwargs.category_id }}-0.html">全部</a>
+        {% else %}
+            <a href="article-{{ kwargs.article_type_id }}-{{ kwargs.category_id }}-0.html">全部</a>
+        {% endif %}
+
+        {% for row in tag_list %}
+            {% if row.nid == kwargs.tags__nid %}
+                <a class="active" href="article-{{ kwargs.article_type_id }}-{{ kwargs.category_id }}-{{ row.nid }}.html">{{ row.title }}</a>
+            {% else %}
+                <a href="article-{{ kwargs.article_type_id }}-{{ kwargs.category_id }}-{{ row.nid }}.html">{{ row.title }}</a>
+            {% endif %}
+        {% endfor %}
+
+    </div>
+    <h3>搜索文章</h3>
+    {% for row in article_list %}
+        <div>
+            <h4><a href="">{{ row.title }}</a></h4>
+        </div>
+    {% endfor %}
+
+
+
+</body>
+</html>
+
