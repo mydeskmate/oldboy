@@ -9,8 +9,21 @@ class ArticleForm(Form):
     content = fields.CharField(
         widget=widgets.Textarea(attrs={'id':'i1'})
     )
-    # def clean_content(self):
-    #     old = self.cleaned_data['content']
+
+    def clean_content(self):
+        """
+        对提交的内容进行xss防护
+        :return:
+        """
+        old = self.cleaned_data['content']
+        from utils.xss import xss
+        return xss(old)
+
+
+
+
+
+
 
 ## kindeditor使用
 CONTENT = ""
@@ -24,7 +37,6 @@ def kindeditor(request):
             content = obj.cleaned_data['content']
             global CONTENT
             CONTENT = content
-            print(content)
             return HttpResponse('...')
         else:
             return HttpResponse(',,,,,,,')

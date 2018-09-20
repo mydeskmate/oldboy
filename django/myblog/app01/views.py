@@ -243,7 +243,7 @@ def article(request,site,nid):
             msg_list_dict[pid]['child'].append(item)
         else:
             result.append(item)
-    print(result)
+    # print(result)
     ################获取评论字符串#####################
     from utils.comment import comment_tree
     comment_str = comment_tree(result)
@@ -281,15 +281,10 @@ def up(request):
             from django.db import transaction
             with transaction.atomic():
                 if val:
-                    # print(user_id)
-                    # print(article_id)
                     models.UpDown.objects.create(user_id=user_id,article_id=article_id,up=True)
                     models.Article.objects.filter(nid=article_id).update(up_count=F('up_count')+1)
                     respone['status'] = 1
                 else:
-                    # print(3333)
-                    # print(user_id)
-                    # print(article_id)
                     models.UpDown.objects.create(user_id=user_id,article_id=article_id,up=False)
                     models.Article.objects.filter(nid=article_id).update(down_count=F('down_count')+1)
                     respone['status'] = 2
@@ -332,3 +327,38 @@ def search(request,**kwargs):
             'kwargs':kwargs,
         }
     )
+
+def comments(request,nid):
+    """
+    获取评论数据,并返回到前端, 通过前端实现多级评论
+    :param request:
+    :return:
+    """
+    response = {'status':True,'data':None,'msg':None}
+    try:
+        msg_list = [
+            {'id': 1, 'content': '写的太好了', 'parent_id': None},
+            {'id': 2, 'content': '你说得对', 'parent_id': None},
+            {'id': 3, 'content': '顶楼上', 'parent_id': None},
+            {'id': 4, 'content': '你眼瞎吗', 'parent_id': 1},
+            {'id': 5, 'content': '我看是', 'parent_id': 4},
+            {'id': 6, 'content': '鸡毛', 'parent_id': 2},
+            {'id': 7, 'content': '你是没呀', 'parent_id': 5},
+            {'id': 8, 'content': '惺惺惜惺惺想寻', 'parent_id': 3},
+        ]
+        msg_list_dict = {}
+        for item in msg_list:
+            item['child']=[]
+            msg_list_dict[item['id']] = item
+        result = []
+        for item in msg_list:
+            pid = item['parent_id']
+            if pid:
+                msg_list_dict[pid]['child'].append(item)
+            else:
+                result.append(item)
+        response['data'] = result
+    except Exception as e:
+        response['status'] = False
+        response['msg'] = str(e)
+    return HttpResponse(json.dumps(response))

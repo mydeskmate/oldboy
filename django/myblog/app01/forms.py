@@ -98,3 +98,4 @@ class LoginForm(Form):
         },
         widget=widgets.PasswordInput(attrs={'class': 'form-control'})
     )
+
