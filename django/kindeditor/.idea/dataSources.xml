@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Django default" uuid="bce28449-0bca-4df3-9fe6-e7daf03fa0a7">
-      <driver-ref>sqlite.xerial</driver-ref>
+    <data-source source="LOCAL" name="Django default" uuid="50629ecd-4b4e-41a3-b71c-c2590b74b07a">
+      <driver-ref>04312eb5-2322-425b-a49e-b42090095573</driver-ref>
       <synchronize>true</synchronize>
       <imported>true</imported>
       <remarks>$PROJECT_DIR$/kindeditor/settings.py</remarks>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\haha\github\oldboy\django\kindeditor\db.sqlite3</jdbc-url>
+      <jdbc-url>jdbc:sqlite:D:\mydata\github\oldboy\django\kindeditor\db.sqlite3</jdbc-url>
       <driver-properties>
         <property name="enable_load_extension" value="true" />
       </driver-properties>

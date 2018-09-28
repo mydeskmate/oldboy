@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^register/',views.register),
     url(r'^check_code/',views.check_code),
     url(r'^up.html$',views.up),
+    url(r'^comments-(\d+).html$',views.comments),  #前端多级评论
     url(r'^backend/article-(?P<article_type_id>\d+)-(?P<category_id>\d+)-(?P<tags__nid>\d+).html$',views.search),
     url(r'^(?P<site>\w+)/(?P<nid>\d+).html',views.article),
     url(r'^(?P<site>\w+)/(?P<key>((category)|(tag)|(date)))/(?P<val>\w+-*\w*)/',views.filter),

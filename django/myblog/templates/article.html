@@ -60,12 +60,57 @@
         <i class="down">{{ obj.down_count }}</i>
     </a>
     <h3>评论</h3>
-    {{ comment_str|safe }}
+    <div id="commentArea"></div>
+{#     {{ comment_str|safe }}   <!--后端生成多级评论 -->#}
+
     <script src="/static/plugin/jquery-1.12.4.js"></script>
     <script>
-        $(function () {
+        // 自定义字符串格式化函数,类似于python的format函数
+        String.prototype.Format = function(arg){
+            /*
+            this,当前字符串  "i am {name1}, age is {age9}"
+             arg,Format方法传入的参数 {name:'alex',age:18}
+             return，格式化之后获取的新内容 i am alex, age is 18
+            */
+            var temp = this.replace(/\{(\w+)\}/g,function (k,kk) {
+                return arg[kk];
+            });
+            return temp;
 
+        };
+
+        $(function () {
+            //前端实现多级评论
+            //发送ajax请求,获取所有评论信息
+            $.ajax({
+                url:'/comments-{{ obj.nid }}.html',
+                type:'GET',
+                dataType:"JSON",
+                success:function(arg){
+                    if(arg.status){    //也可以写成arg["status"]
+                        var comment = commentTree(arg.data);
+                        $('#commentArea').append(comment);
+                    }else{
+                        alert(arg.msg);
+                    }
+                }
+            })
         });
+
+        function commentTree(commentList) {
+            //根据列表生成多级评论
+            var comment_str = "<div class='comment'>";
+            $.each(commentList,function (k,row) {
+                //var temp = "<div class='content'>"+row.content+"</div>";
+                var temp = "<div class='content'>{content}</div>".Format({content:row.content});
+                comment_str += temp;
+                if(row.child.length>0){
+                    comment_str += commentTree(row.child);
+                }
+            });
+            comment_str+='</div>';
+            return comment_str;
+        }
 
         function updown(ths,nid,val) {
             $.ajax({
